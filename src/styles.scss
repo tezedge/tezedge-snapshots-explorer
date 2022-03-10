@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@import 'utilities/variables';
+@import 'utilities/text';
+@import 'utilities/layout';
+@import 'utilities/design';
+@import 'material/material-icon';
+@import 'material/material-tooltip';
+@import 'material/material-accordion';
+@import 'custom-components/button-group';
+
+$custom-typography: mat.define-typography-config($font-family: '"Inter", sans-serif');
+@include mat.core($custom-typography);
+
+
+html,
+body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  margin: 0 !important;
+  font-weight: 300;
+  overflow-y: hidden;
+  background-color: $background-base;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}

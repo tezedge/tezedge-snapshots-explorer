@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'tezedge-snapshots-explorer';
+
+  constructor(private http : HttpClient) {
+    this.http.get('http://162.55.241.136/mainnet/archive/').subscribe(x => console.log(x))
+  }
 }

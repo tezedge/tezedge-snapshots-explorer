@@ -1,0 +1,142 @@
+@import 'utilities/layout';
+@import 'utilities/variables';
+
+@mixin styleIcon($color) {
+  color: $color;
+
+  ::ng-deep mat-icon {
+    margin-right: 3px;
+
+    svg {
+      fill: $color;
+    }
+  }
+}
+
+h2 {
+  font-weight: 400;
+  font-size: 42px;
+  line-height: 42px;
+  letter-spacing: -0.4px;
+}
+
+.snapshots-wrapper {
+  max-width: 1350px;
+  margin: 0 auto;
+}
+
+.chip-example {
+  margin-bottom: 40px;
+}
+
+.chip {
+  border-radius: 20px;
+  padding-right: 6px;
+  padding-left: 5px;
+  height: 20px;
+  min-width: 67px;
+  border: 1px solid;
+
+  @include flexRowCenter();
+
+  &.blue {
+    border-color: #4e90e8;
+    background: rgba(78, 144, 232, 0.1);
+    @include styleIcon(#4e90e8);
+  }
+
+  &.green {
+    border-color: #3a7e7b;
+    background: rgba(58, 126, 123, 0.1);
+    @include styleIcon(#3a7e7b);
+  }
+
+  &.gray {
+    background: #e4e5ea;
+    border-color: transparent;
+    @include styleIcon(#1c1c1e);
+  }
+
+  &.white {
+    color: $foreground-7;
+    border-color: rgba(151, 151, 151, 0.5);
+  }
+
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+
+.bar {
+  color: #e4e5ea;
+  font-size: 16px;
+}
+
+mat-accordion {
+  display: block;
+  background-color: $background-surface;
+
+  &.loading {
+    min-height: 450px;
+  }
+
+  a {
+    color: white;
+  }
+
+  mat-panel-title {
+    .panel-title-content {
+      max-width: 1000px;
+      width: 100%;
+    }
+  }
+
+  .accordion-paddings {
+    color: $foreground-7;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .panel-arrow {
+    transition: 0.2s ease-out;
+    transform: rotate(0deg);
+    cursor: pointer;
+
+    &.open {
+      transform: rotate(90deg);
+      cursor: context-menu;
+    }
+  }
+
+  .content-truncate {
+    width: 90%;
+
+    .chips {
+      width: 160px;
+    }
+
+    &.body {
+      > div {
+        line-height: 24px;
+      }
+    }
+  }
+
+  .clone-sample {
+    background-color: $foreground-1;
+    line-height: 14px;
+
+    .code div {
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .copy-button {
+      background-color: rgba(36, 38, 40, 0.1);
+      height: unset;
+
+      &:hover {
+        background-color: rgba(36, 38, 40, 0.15);
+      }
+    }
+  }
+}

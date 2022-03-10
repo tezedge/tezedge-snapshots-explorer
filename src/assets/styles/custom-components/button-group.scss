@@ -1,0 +1,53 @@
+@import 'utilities/variables';
+
+.button-toggle-group {
+  height: 32px;
+  background-color: $background-surface-fade-1;
+  border-radius: 6px;
+  $button-width: 130px;
+
+  &::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    border-radius: 6px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    width: $button-width;
+    background-color: $foreground-2;
+    transition: left 0.1s ease-out;
+  }
+
+  &.active-0::after {
+    left: 0;
+  }
+
+  &.active-1::after {
+    left: $button-width;
+  }
+
+  button {
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.2px;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: $button-width;
+    height: 100%;
+    border: none;
+    background-color: unset;
+    border-radius: 6px;
+    transition: color 50ms linear;
+    color: $foreground-6;
+
+    &:hover:not(.active) {
+      background-color: $background-surface-fade-2;
+      color: $foreground-7;
+    }
+
+    &.active {
+      color: $foreground;
+    }
+  }
+}
