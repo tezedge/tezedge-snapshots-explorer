@@ -4,7 +4,7 @@
 <div class="flex-column h-100" *ngIf="snapshotData">
   <div class="snapshots-wrapper flex-column w-100">
     <div fxFlex="80px" class="flex-row flex-end">
-      <button class="theme-switcher f-12 margin-5 border-remove pointer"
+      <button class="theme-switcher f-12 margin-top-5 border-remove pointer flex-row align-center flex-center"
               (click)="changeTheme(activeTheme === 'dark' ? 'light' : 'dark')">
         <mat-icon *ngIf="activeTheme === 'dark'"
                   class="f-12 icon-16" svgIcon="sunny"></mat-icon>
