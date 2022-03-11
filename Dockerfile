@@ -34,4 +34,4 @@ COPY --from=BUILD_IMAGE /dist /usr/share/nginx/html
 CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env/env.template.js > /usr/share/nginx/html/assets/env/env.js && exec nginx -g 'daemon off;'"]
 
 # Example of how to run
-# docker run --env API='{ api: "http://162.55.241.136" }' -p 8080:80 tezedge-snapshots-explorer:latest
+# docker run --env API='{ "api": "http://162.55.241.136" }' -p 8080:80 tezedge-snapshots-explorer:latest
