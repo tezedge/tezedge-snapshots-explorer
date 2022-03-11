@@ -1,11 +1,10 @@
 export interface Snapshot {
-  snapshot: string;
-  datetime: string;
-  protocol: string;
-  nodeVersion: string;
-  blockHash: string;
-  blockTime: string;
-  blockNum: number;
+  datetime: Date | string;
+  type: string;
   fileName: string;
+  size: number;
   network: string;
+  context: string;
+  fileExtension: string;
+  hash: string;
 }
