@@ -6,6 +6,11 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./features/snapshot-list/snapshot-list.module').then(m => m.SnapshotsListModule)
   },
+  {
+    path: '**',
+    pathMatch: 'full',
+    redirectTo: ''
+  },
 ];
 
 @NgModule({

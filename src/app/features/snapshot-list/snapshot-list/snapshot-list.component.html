@@ -1,114 +1,148 @@
-<div class="snapshots-wrapper">
-  <div class="flex-row flex-between align-center">
-    <h2>Snapshots</h2>
-    <div class="button-toggle-group p-relative"
-         [ngClass]="'active-' + activeButtonIndex">
-      <button *ngFor="let button of buttonTabs; let i=index"
-              class="font-600 pointer f-12" [class.active]="i === activeButtonIndex"
-              (click)="activeButtonIndex = i">{{ button }}</button>
+<div class="flex-column h-100" *ngIf="snapshotData">
+  <div class="snapshots-wrapper flex-column w-100">
+    <div fxFlex="115px" class="flex-row flex-between align-center">
+      <h2>Snapshots</h2>
+      <div class="button-toggle-group p-relative"
+           [ngClass]="'active-' + activeButtonIndex">
+        <button *ngFor="let network of snapshotData.networks; let i=index"
+                class="font-600 pointer f-12 text-uppercase" [class.active]="i === activeButtonIndex"
+                (click)="activeButtonIndex = i; filterByNetwork(network)">{{ network }}</button>
+      </div>
+    </div>
+
+    <div fxFlex="20px" class="flex-row f-12 chip-example align-center flex-between">
+      <div class="flex-row align-center">
+        <div class="chip pointer text-uppercase"
+             [class.margin-right-10]="i !== snapshotData.contexts.size - 1"
+             [class.blue]="i % 2 === 0"
+             [class.green]="i % 2 !== 0"
+             [style.opacity]="contextFilter && contextFilter !== context ? 0.6 : 1"
+             (click)="filterByContext(context)"
+             *ngFor="let context of snapshotData.contexts; let i=index">
+          <mat-icon fxFlex="14px" class="icon-12"
+                    [svgIcon]="(!contextFilter || contextFilter === context) ? 'check' : 'close-blank'"></mat-icon>
+          <div fxFlex class="flex-row flex-center">{{ context }}</div>
+        </div>
+        <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
+        <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
+             class="chip margin-right-10 pointer text-uppercase flex-row"
+             [class.white]="i % 2 === 0"
+             [class.gray]="i % 2 !== 0"
+             [style.opacity]="fileExtensionFilter && fileExtensionFilter !== extension ? 0.6 : 1"
+             (click)="filterByExtension(extension)">
+          <mat-icon fxFlex="14px" class="icon-12"
+                    [svgIcon]="(!fileExtensionFilter || fileExtensionFilter === extension) ? 'check' : 'close-blank'"></mat-icon>
+          <div fxFlex class="flex-row flex-center">{{ extension }}</div>
+        </div>
+      </div>
+      <div class="stats flex-row align-center border-rad-4">
+        <span class="foreground-4 margin-right-5">Total Snapshots</span>
+        <span class="foreground-7">{{ allSnapshots.length }}</span>
+        <span class="padding-horizontal-10 foreground-4">·</span>
+        <span *ngFor="let stat of snapshotData.stats; let i=index"
+              class="text-capitalize">
+          <span *ngIf="i !== 0" class="padding-horizontal-10 foreground-4">·</span>
+          <span class="foreground-4 margin-right-5">{{ stat.name }}</span>
+          <span class="foreground-7">{{ stat.value }}</span>
+        </span>
+      </div>
     </div>
   </div>
-
-  <div class="flex-row f-12 chip-example">
-    <div class="chip blue margin-right-10">
-      <mat-icon svgIcon="check" class="icon-12"></mat-icon>
-      <div>OCTEST</div>
-    </div>
-    <div class="chip green">
-      <mat-icon svgIcon="check" class="icon-12"></mat-icon>
-      <div>TEZEDGE</div>
-    </div>
-    <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
-    <div class="chip gray margin-right-10 pointer" (click)="filterSnapshots('rolling')"
-         [style.opacity]="filterType === 'full' ? 0.6 : 1">
-      <mat-icon svgIcon="check" class="icon-12"></mat-icon>
-      <div>ROLLING</div>
-    </div>
-    <div class="chip white pointer" (click)="filterSnapshots('full')"
-         [style.opacity]="filterType === 'rolling' ? 0.6 : 1">
-      <mat-icon svgIcon="check" class="icon-12"></mat-icon>
-      <div>&nbsp;&nbsp;&nbsp;FULL&nbsp;&nbsp;&nbsp;</div>
+  <div fxFlex="calc(100% - 115px - 60px)" class="overflow-auto">
+    <div class="snapshots-wrapper">
+      <mat-accordion *ngIf="snapshotData">
+        <mat-expansion-panel *ngFor="let snapshot of snapshotData.snapshots; let i=index"
+                             hideToggle [expanded]="activePanel === i" [disabled]="activePanel === i"
+                             (click)="updateOpenAccordionElement(i)">
+          <mat-expansion-panel-header>
+            <mat-panel-title class="flex-column accordion-paddings">
+              <div class="panel-title-content flex-column align-stretch border-top" [class.border-remove]="i === 0">
+                <div class="padding-top-8 margin-bottom-5 f-12">{{ snapshot.datetime }}</div>
+                <div class="row-content flex-row align-center f-12 padding-top-10 margin-bottom-10 align-center"
+                     [class.open]="activePanel === i">
+                  <div fxFlex="200px" class="d-flex chips">
+                    <div class="chip margin-right-10 text-uppercase"
+                         [class.blue]="i % 2 === 0"
+                         [class.green]="i % 2 !== 0"
+                         [class.d-none]="snapshot.context !== context"
+                         *ngFor="let context of snapshotData.contexts; let i=index">
+                      <div>{{ context }}</div>
+                    </div>
+                    <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
+                         class="chip gray margin-right-10 text-uppercase"
+                         [class.white]="i % 2 === 0"
+                         [class.gray]="i % 2 !== 0"
+                         [class.d-none]="snapshot.fileExtension !== extension">
+                      <div>{{ extension }}</div>
+                    </div>
+                  </div>
+                  <div fxFlex class="flex-row align-center">
+                    <a class="truncate"
+                       (click)="$event.stopPropagation()"
+                       [href]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"
+                       [matTooltip]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"
+                       matTooltipShowDelay="1000"
+                       #downloadAnchor>{{ snapshot.fileName }}</a>
+                    <span class="download-btn border-rad-2 margin-left-5 flex-center pointer"
+                          (click)="downloadAnchor.click(); $event.stopPropagation()"
+                          matTooltip="Download">
+                      <mat-icon svgIcon="arrow-down" class="icon-12"></mat-icon>
+                    </span>
+                  </div>
+                  <mat-icon fxFlex="50px" svgIcon="chevron-right" class="icon-14 panel-arrow"
+                            [class.open]="activePanel === i"></mat-icon>
+                </div>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <div class="f-12 content-truncate body accordion-paddings padding-left-remove">
+              <div class="d-flex flex-between">
+                <div class="foreground-7">Network</div>
+                <div>{{ snapshot.network }}</div>
+              </div>
+              <div class="d-flex flex-between">
+                <div class="foreground-7">Snapshot time</div>
+                <div>{{ snapshot.datetime }}</div>
+              </div>
+              <div class="d-flex flex-between">
+                <div class="foreground-7">Block hash</div>
+                <div>{{ snapshot.hash }}</div>
+              </div>
+              <div class="d-flex flex-between">
+                <div class="foreground-7">Context</div>
+                <div>{{ snapshot.context }}</div>
+              </div>
+              <div class="d-flex flex-between">
+                <div class="foreground-7">Snapshot type</div>
+                <div>{{ snapshot.fileExtension }}</div>
+              </div>
+            </div>
+            <div class="accordion-paddings">
+              <div class="clone-sample margin-top-10 margin-bottom-10 padding-10 f-12 d-flex align-start">
+                <div class="code">
+                  <div>
+                    # To restore testnet full snapshot from {{ snapshot.network }},
+                    blockhash: {{ snapshot.hash }}
+                  </div>
+                  <div #code style="color: #ff7300">
+                    wget {{ API }}/{{ snapshot.network }}/{{ snapshot.context }}/{{ snapshot.fileExtension }}
+                    /{{ snapshot.fileName }}
+                    tezos-node snapshot import --block {{ snapshot.hash }} {{ snapshot.fileName }} --rolling
+                  </div>
+                </div>
+                <div
+                  class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-2 font-600 flex-row align-center"
+                  (click)="copyToClipboard(code)">
+                  <span>Copy</span>
+                  <mat-icon svgIcon="clipboard" class="icon-12 margin-left-5"></mat-icon>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
     </div>
   </div>
-
-  <mat-accordion [class.loading]="!snapshots">
-    <mat-expansion-panel *ngFor="let snapshot of snapshots; let i=index"
-                         hideToggle [expanded]="activePanel === i" [disabled]="activePanel === i"
-                         [class.d-none]="filterType && snapshot.snapshot !== filterType"
-                         (click)="updateOpenAccordionElement(i)">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="flex-column accordion-paddings">
-          <div class="panel-title-content flex-column align-stretch">
-            <div class="padding-top-8 margin-bottom-5 f-12">{{ snapshot.datetime }}</div>
-            <div class="row-content flex-row align-center f-12 padding-top-10 margin-bottom-10 align-center"
-                 [class.open]="activePanel === i">
-              <div fxFlex="200px" class="d-flex chips">
-                <div class="chip green margin-right-10" *ngIf="false">
-                  <div>TEZEDGE</div>
-                </div>
-                <div class="chip blue margin-right-10">
-                  <div class="context-menu">OCTEST</div>
-                </div>
-                <div class="chip gray margin-right-10" *ngIf="snapshot.snapshot === 'rolling'">
-                  <div>ROLLING</div>
-                </div>
-                <div class="chip white margin-right-10" *ngIf="snapshot.snapshot === 'full'">
-                  <div>FULL</div>
-                </div>
-              </div>
-              <a fxFlex
-                 [matTooltip]="'https://snapshots-tezos.giganode.io/snapshots/' + snapshot.fileName"
-                 matTooltipShowDelay="1000"
-                 [href]="'https://snapshots-tezos.giganode.io/snapshots/' + snapshot.fileName"
-                 class="truncate">{{ snapshot.fileName }}</a>
-              <mat-icon fxFlex="50px" svgIcon="chevron-right" class="icon-14 panel-arrow"
-                        [class.open]="activePanel === i"></mat-icon>
-            </div>
-          </div>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <ng-template matExpansionPanelContent>
-        <div class="f-12 content-truncate body accordion-paddings">
-          <div class="d-flex flex-between">
-            <div class="text-gray-63">Protocol</div>
-            <div>{{ snapshot.protocol }}</div>
-          </div>
-          <div class="d-flex flex-between">
-            <div class="text-gray-63">Node Version</div>
-            <div>{{ snapshot.nodeVersion }}</div>
-          </div>
-          <div class="d-flex flex-between">
-            <div class="text-gray-63">Blockhash</div>
-            <div>{{ snapshot.blockHash }}</div>
-          </div>
-          <div class="d-flex flex-between">
-            <div class="text-gray-63">Blocktime</div>
-            <div>{{ snapshot.blockTime }}</div>
-          </div>
-          <div class="d-flex flex-between">
-            <div class="text-gray-63">Blocknum</div>
-            <div>{{ snapshot.blockNum }}</div>
-          </div>
-        </div>
-        <div class="accordion-paddings">
-          <div class="clone-sample margin-top-10 margin-bottom-10 padding-10 f-12 d-flex align-start">
-            <div class="code">
-              <div>
-                # To restore testnet full snapshot from {{ snapshot.blockTime }}, blocknum: {{ snapshot.blockNum }},
-                blockhash: {{ snapshot.blockHash }}
-              </div>
-              <div #code style="color: #e1782f">
-                wget https://snapshots-tezos.giganode.io/snapshots/{{ snapshot.fileName }}
-                tezos-node snapshot import --block {{ snapshot.blockHash }} {{ snapshot.fileName }} --rolling
-              </div>
-            </div>
-            <div class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-4 font-600"
-                 (click)="copyToClipboard(code)">Copy
-            </div>
-          </div>
-        </div>
-      </ng-template>
-    </mat-expansion-panel>
-  </mat-accordion>
 
 </div>

@@ -27,6 +27,18 @@
     left: $button-width;
   }
 
+  &.active-2::after {
+    left: calc(#{$button-width} * 2);
+  }
+
+  &.active-3::after {
+    left: calc(#{$button-width} * 3);
+  }
+
+  &.active-4::after {
+    left: calc(#{$button-width} * 4);
+  }
+
   button {
     position: relative;
     z-index: 1;
