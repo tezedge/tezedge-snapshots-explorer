@@ -77,10 +77,9 @@ export class SnapshotListComponent implements OnInit {
 
   filterByNetwork(network: string): void {
     if (network === this.networkFilter) {
-      this.networkFilter = undefined;
-    } else {
-      this.networkFilter = network;
+      return;
     }
+    this.networkFilter = network;
     this.filterSnapshots();
   }
 
