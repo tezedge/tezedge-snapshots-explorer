@@ -78,6 +78,17 @@ h2 {
   font-size: 16px;
 }
 
+.theme-switcher {
+  border-radius: 4px !important;
+  background-color: transparent;
+  width: 40px;
+  height: 30px;
+
+  &:hover {
+    background: $foreground-1;
+  }
+}
+
 mat-accordion {
   display: block;
 
@@ -94,6 +105,10 @@ mat-accordion {
 
     &:hover:not(.mat-expanded) {
       background: $background-surface-fade-1;
+    }
+
+    .mat-expansion-panel-header:hover {
+      background: none !important;
     }
   }
 

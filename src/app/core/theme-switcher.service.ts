@@ -26,7 +26,7 @@ const DARK_THEME: Theme = {
 const LIGHT_THEME: Theme = {
   name: 'light',
   cssVariables: {
-    '--background-base': '#fefefe',
+    '--background-base': '#eaeaea',
     '--background-surface': '#f5f5f5',
     '--background-surface-fade-1': '#ffffff',
     '--background-surface-fade-2': '#cacaca',

@@ -4,7 +4,10 @@ import { SnapshotListService } from './snapshot-list.service';
 import { SnapshotData } from '@shared/types/snapshot/snapshot-data.type';
 import { Snapshot } from '@shared/types/snapshot/snapshot.type';
 import { environment } from '@environment/environment';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-snapshot-list',
   templateUrl: './snapshot-list.component.html',
@@ -14,24 +17,29 @@ import { environment } from '@environment/environment';
 export class SnapshotListComponent implements OnInit {
 
   readonly API = environment.api;
+
   networkTabs: string[];
-  activeButtonIndex = 0;
+  activeButtonIndex: number;
 
   snapshotData: SnapshotData;
-  activePanel: number = 0;
+  activeAccordionPanel: number = 0;
 
   networkFilter: string;
   contextFilter: string;
   fileExtensionFilter: string;
 
   allSnapshots: Snapshot[];
+  activeTheme: string;
 
   constructor(private snapshotService: SnapshotListService,
               private cdRef: ChangeDetectorRef,
-              private snack: MatSnackBar) { }
+              private snack: MatSnackBar,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.getSnapshots();
+    this.activeTheme = localStorage.getItem('theme') || 'dark';
+    this.changeTheme(this.activeTheme);
   }
 
   private getSnapshots(): void {
@@ -39,20 +47,31 @@ export class SnapshotListComponent implements OnInit {
       this.snapshotData = snapshotData;
       this.allSnapshots = snapshotData.snapshots;
       this.networkTabs = Array.from(snapshotData.networks);
-      this.networkFilter = this.networkTabs[0];
-      this.filterSnapshots();
+      const name = this.router.url.split('/')[1];
+      const snapshot = this.allSnapshots.find(s => s.fileName === name);
+      if (snapshot) {
+        this.networkFilter = snapshot.network;
+        this.filterSnapshots();
+        this.activeAccordionPanel = this.snapshotData.snapshots.findIndex(s => s === snapshot);
+      } else {
+        this.router.navigate(['']);
+        this.networkFilter = this.networkTabs[0];
+        this.filterSnapshots();
+      }
+      this.activeButtonIndex = this.networkTabs.indexOf(this.networkFilter);
+
       this.cdRef.detectChanges();
     });
   }
 
   updateOpenAccordionElement(index: number): void {
-    if (this.activePanel !== index) {
-      this.activePanel = index;
+    if (this.activeAccordionPanel !== index) {
+      this.activeAccordionPanel = index;
+      this.router.navigate([this.snapshotData.snapshots[index].fileName]);
     }
   }
 
-  copyToClipboard(code: HTMLDivElement): void {
-    navigator.clipboard.writeText(code.textContent);
+  copyToClipboard(): void {
     this.snack.open('Command copied to clipboard', null, { duration: 3000 });
   }
 
@@ -89,5 +108,13 @@ export class SnapshotListComponent implements OnInit {
       && (this.contextFilter ? snapshot.context === this.contextFilter : true)
       && (this.fileExtensionFilter ? snapshot.fileExtension === this.fileExtensionFilter : true)
     );
+  }
+
+  changeTheme(theme: string): void {
+    localStorage.setItem('theme', theme);
+    this.activeTheme = theme;
+
+    document.body.classList.remove('theme-light', 'theme-dark');
+    document.body.classList.add('theme-' + theme);
   }
 }

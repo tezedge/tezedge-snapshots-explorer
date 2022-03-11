@@ -1,7 +1,19 @@
+<div class="flex-row flex-center align-center margin-top-10 p-absolute w-100vw h-100vh foreground-7"
+     *ngIf="!snapshotData">Loading ...
+</div>
 <div class="flex-column h-100" *ngIf="snapshotData">
   <div class="snapshots-wrapper flex-column w-100">
-    <div fxFlex="115px" class="flex-row flex-between align-center">
-      <h2>Snapshots</h2>
+    <div fxFlex="80px" class="flex-row flex-end">
+      <button class="theme-switcher f-12 margin-5 border-remove pointer"
+              (click)="changeTheme(activeTheme === 'dark' ? 'light' : 'dark')">
+        <mat-icon *ngIf="activeTheme === 'dark'"
+                  class="f-12 icon-16" svgIcon="sunny"></mat-icon>
+        <mat-icon *ngIf="activeTheme === 'light'"
+                  class="f-12 icon-16" svgIcon="night"></mat-icon>
+      </button>
+    </div>
+    <div fxFlex="70px" class="flex-row flex-between align-start">
+      <h2 class="margin-remove">Snapshots</h2>
       <div class="button-toggle-group p-relative"
            [ngClass]="'active-' + activeButtonIndex">
         <button *ngFor="let network of snapshotData.networks; let i=index"
@@ -10,7 +22,7 @@
       </div>
     </div>
 
-    <div fxFlex="20px" class="flex-row f-12 chip-example align-center flex-between">
+    <div fxFlex="25px" class="flex-row f-12 chip-example align-center flex-between">
       <div class="flex-row align-center">
         <div class="chip pointer text-uppercase"
              [class.margin-right-10]="i !== snapshotData.contexts.size - 1"
@@ -36,30 +48,30 @@
         </div>
       </div>
       <div class="stats flex-row align-center border-rad-4">
-        <span class="foreground-4 margin-right-5">Total Snapshots</span>
-        <span class="foreground-7">{{ allSnapshots.length }}</span>
+        <span class="foreground-7 margin-right-5">Total Snapshots</span>
+        <span class="foreground">{{ allSnapshots.length }}</span>
         <span class="padding-horizontal-10 foreground-4">·</span>
         <span *ngFor="let stat of snapshotData.stats; let i=index"
               class="text-capitalize">
           <span *ngIf="i !== 0" class="padding-horizontal-10 foreground-4">·</span>
-          <span class="foreground-4 margin-right-5">{{ stat.name }}</span>
-          <span class="foreground-7">{{ stat.value }}</span>
+          <span class="foreground-7 margin-right-5">{{ stat.name }}</span>
+          <span class="foreground">{{ stat.value }}</span>
         </span>
       </div>
     </div>
   </div>
-  <div fxFlex="calc(100% - 115px - 60px)" class="overflow-auto">
+  <div fxFlex="calc(100% - 80px - 70px - 25px)" class="overflow-auto">
     <div class="snapshots-wrapper">
       <mat-accordion *ngIf="snapshotData">
         <mat-expansion-panel *ngFor="let snapshot of snapshotData.snapshots; let i=index"
-                             hideToggle [expanded]="activePanel === i" [disabled]="activePanel === i"
+                             hideToggle [expanded]="activeAccordionPanel === i" [disabled]="activeAccordionPanel === i"
                              (click)="updateOpenAccordionElement(i)">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex-column accordion-paddings">
               <div class="panel-title-content flex-column align-stretch border-top" [class.border-remove]="i === 0">
                 <div class="padding-top-8 margin-bottom-5 f-12">{{ snapshot.datetime }}</div>
                 <div class="row-content flex-row align-center f-12 padding-top-10 margin-bottom-10 align-center"
-                     [class.open]="activePanel === i">
+                     [class.open]="activeAccordionPanel === i">
                   <div fxFlex="200px" class="d-flex chips">
                     <div class="chip margin-right-10 text-uppercase"
                          [class.blue]="i % 2 === 0"
@@ -90,7 +102,7 @@
                     </span>
                   </div>
                   <mat-icon fxFlex="50px" svgIcon="chevron-right" class="icon-14 panel-arrow"
-                            [class.open]="activePanel === i"></mat-icon>
+                            [class.open]="activeAccordionPanel === i"></mat-icon>
                 </div>
               </div>
             </mat-panel-title>
@@ -126,14 +138,13 @@
                     blockhash: {{ snapshot.hash }}
                   </div>
                   <div #code style="color: #ff7300">
-                    wget {{ API }}/{{ snapshot.network }}/{{ snapshot.context }}/{{ snapshot.fileExtension }}
-                    /{{ snapshot.fileName }}
+                    wget {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
                     tezos-node snapshot import --block {{ snapshot.hash }} {{ snapshot.fileName }} --rolling
                   </div>
                 </div>
-                <div
-                  class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-2 font-600 flex-row align-center"
-                  (click)="copyToClipboard(code)">
+                <div [cdkCopyToClipboard]="code.textContent"
+                     (click)="copyToClipboard()"
+                     class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-2 font-600 flex-row align-center">
                   <span>Copy</span>
                   <mat-icon svgIcon="clipboard" class="icon-12 margin-left-5"></mat-icon>
                 </div>

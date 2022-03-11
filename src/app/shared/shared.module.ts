@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ class MaterialModule {}
 
 const SHARED_MODULES = [
   MaterialModule,
+  ClipboardModule,
 ];
 
 @NgModule({
