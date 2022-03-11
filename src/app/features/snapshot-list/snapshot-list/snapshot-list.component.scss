@@ -112,13 +112,6 @@ mat-accordion {
     }
   }
 
-  mat-panel-title {
-    .panel-title-content {
-      max-width: 1000px;
-      width: 100%;
-    }
-  }
-
   .accordion-paddings {
     color: $foreground-7;
     padding-right: 15px;
@@ -149,7 +142,7 @@ mat-accordion {
 
   .content-truncate {
     width: 100%;
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
 
     .chips {

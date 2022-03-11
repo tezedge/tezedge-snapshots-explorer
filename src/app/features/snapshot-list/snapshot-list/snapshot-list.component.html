@@ -31,21 +31,28 @@
              [style.opacity]="contextFilter && contextFilter !== context ? 0.6 : 1"
              (click)="filterByContext(context)"
              *ngFor="let context of snapshotData.contexts; let i=index">
-          <mat-icon fxFlex="14px" class="icon-12"
-                    [svgIcon]="(!contextFilter || contextFilter === context) ? 'check' : 'close-blank'"></mat-icon>
+          <span fxFlex="14px" class="d-flex align-center">
+            <mat-icon class="icon-12"
+                      [svgIcon]="(!contextFilter || contextFilter === context) ? 'check' : 'close-blank'"></mat-icon>
+          </span>
           <div fxFlex class="flex-row flex-center">{{ context }}</div>
         </div>
         <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
         <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
-             class="chip margin-right-10 pointer text-uppercase flex-row"
+             class="chip pointer text-uppercase flex-row"
+             [class.margin-right-10]="i !== snapshotData.contexts.size - 1"
              [class.white]="i % 2 === 0"
              [class.gray]="i % 2 !== 0"
              [style.opacity]="fileExtensionFilter && fileExtensionFilter !== extension ? 0.6 : 1"
              (click)="filterByExtension(extension)">
-          <mat-icon fxFlex="14px" class="icon-12"
-                    [svgIcon]="(!fileExtensionFilter || fileExtensionFilter === extension) ? 'check' : 'close-blank'"></mat-icon>
+          <span fxFlex="14px" class="d-flex align-center">
+            <mat-icon [svgIcon]="(!fileExtensionFilter || fileExtensionFilter === extension) ? 'check' : 'close-blank'"
+                      class="icon-12"></mat-icon>
+          </span>
           <div fxFlex class="flex-row flex-center">{{ extension }}</div>
         </div>
+        <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
+        <div>{{ snapshotData.snapshots.length }} snapshots</div>
       </div>
       <div class="stats flex-row align-center border-rad-4">
         <span class="foreground-7 margin-right-5">Total Snapshots</span>
@@ -68,7 +75,7 @@
                              (click)="updateOpenAccordionElement(i)">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex-column accordion-paddings">
-              <div class="panel-title-content flex-column align-stretch border-top" [class.border-remove]="i === 0">
+              <div class="content-truncate flex-column align-stretch border-top" [class.border-remove]="i === 0">
                 <div class="padding-top-8 margin-bottom-5 f-12">{{ snapshot.datetime }}</div>
                 <div class="row-content flex-row align-center f-12 padding-top-10 margin-bottom-10 align-center"
                      [class.open]="activeAccordionPanel === i">
@@ -101,14 +108,14 @@
                       <mat-icon svgIcon="arrow-down" class="icon-12"></mat-icon>
                     </span>
                   </div>
-                  <mat-icon fxFlex="50px" svgIcon="chevron-right" class="icon-14 panel-arrow"
+                  <mat-icon fxFlex="20px" svgIcon="chevron-right" class="icon-14 panel-arrow"
                             [class.open]="activeAccordionPanel === i"></mat-icon>
                 </div>
               </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <ng-template matExpansionPanelContent>
-            <div class="f-12 content-truncate body accordion-paddings padding-left-remove">
+            <div class="f-12 content-truncate body padding-left-remove">
               <div class="d-flex flex-between">
                 <div class="foreground-7">Network</div>
                 <div>{{ snapshot.network }}</div>
@@ -130,7 +137,7 @@
                 <div>{{ snapshot.fileExtension }}</div>
               </div>
             </div>
-            <div class="accordion-paddings">
+            <div class="content-truncate">
               <div class="clone-sample margin-top-10 margin-bottom-10 padding-10 f-12 d-flex align-start">
                 <div class="code">
                   <div>
