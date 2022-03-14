@@ -82,16 +82,18 @@ export class SnapshotListService {
   private getFiles(network: string, context: string, extension: string, data: SnapshotData): Observable<void> {
     return this.http.get<any[]>(`${this.API}/${network}/${context}/${extension}`).pipe(
       map((files: any[]) =>
-        files.map(file => ({
-          datetime: this.getDate(file.name.split('_')[2]),
-          type: file.type,
-          fileName: file.name,
-          size: file.size,
-          hash: file.name.split('_')[3],
-          network,
-          context,
-          fileExtension: extension
-        } as Snapshot))
+        files
+          .filter(file => file.type === 'file' && !file.name.includes('.temp'))
+          .map(file => ({
+            datetime: this.getDate(file.name.split('_')[2]),
+            type: file.type,
+            fileName: file.name,
+            size: file.size,
+            hash: file.name.split('_')[3],
+            network,
+            context,
+            fileExtension: extension
+          } as Snapshot))
       ),
       map((snapshots: Snapshot[]) => {
         data.networks.add(network);
