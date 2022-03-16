@@ -24,9 +24,11 @@ RUN ng build --configuration production --output-path=/dist
 # remove development dependencies
 RUN npm prune --production
 
+RUN ls
 ################
 # Run in NGINX #
 ################
+
 FROM nginx:alpine
 COPY --from=BUILD_IMAGE /dist /usr/share/nginx/html
 
