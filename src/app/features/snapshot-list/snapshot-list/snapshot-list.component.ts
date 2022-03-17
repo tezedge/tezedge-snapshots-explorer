@@ -48,14 +48,14 @@ export class SnapshotListComponent implements OnInit {
       this.allSnapshots = snapshotData.snapshots;
       this.networkTabs = Array.from(snapshotData.networks);
       const name = this.router.url.split('/')[1];
-      const snapshot = this.allSnapshots.find(s => s.fileName === name);
-      if (snapshot) {
-        this.networkFilter = snapshot.network;
+      const snapshotFromUrl = this.allSnapshots.find(s => s.fileName === name);
+      if (snapshotFromUrl) {
+        this.networkFilter = snapshotFromUrl.network;
         this.filterSnapshots();
-        this.activeAccordionPanel = this.snapshotData.snapshots.findIndex(s => s === snapshot);
+        this.activeAccordionPanel = this.snapshotData.snapshots.findIndex(s => s === snapshotFromUrl);
       } else {
-        this.router.navigate(['']);
         this.networkFilter = this.networkTabs[0];
+        this.updateRoute(this.activeAccordionPanel);
         this.filterSnapshots();
       }
       this.activeButtonIndex = this.networkTabs.indexOf(this.networkFilter);
@@ -64,10 +64,14 @@ export class SnapshotListComponent implements OnInit {
     });
   }
 
+  private updateRoute(snapshotIndex): void {
+    this.router.navigate([this.snapshotData.snapshots[snapshotIndex].fileName]);
+  }
+
   updateOpenAccordionElement(index: number): void {
     if (this.activeAccordionPanel !== index) {
       this.activeAccordionPanel = index;
-      this.router.navigate([this.snapshotData.snapshots[index].fileName]);
+      this.updateRoute(index);
     }
   }
 
