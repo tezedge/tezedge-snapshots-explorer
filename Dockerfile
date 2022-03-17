@@ -8,7 +8,7 @@ WORKDIR /app
 RUN npm install -g @angular/cli@13.2.0
 
 # clone & install deps for repo
-ARG branch=master
+ARG branch=develop
 ARG node_snapshots_explorer_git="https://github.com/tezedge/tezedge-snapshots-explorer"
 RUN git clone ${node_snapshots_explorer_git} && \
     cd tezedge-snapshots-explorer && \
@@ -31,7 +31,7 @@ RUN ls
 
 FROM nginx:alpine
 COPY --from=BUILD_IMAGE /dist /usr/share/nginx/html
-COPY --from=BUILD_IMAGE nginx.conf /etc/nginx/nginx.conf
+COPY --from=BUILD_IMAGE /app/tezedge-snapshots-explorer/nginx.conf /etc/nginx/nginx.conf
 
 # When the container starts, replace the env.js with values from environment variables
 CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env/env.template.js > /usr/share/nginx/html/assets/env/env.js && exec nginx -g 'daemon off;'"]
