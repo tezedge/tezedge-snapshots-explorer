@@ -18,18 +18,18 @@ export class SnapshotListComponent implements OnInit {
 
   readonly API = environment.api;
 
-  networkTabs: string[];
-  activeButtonIndex: number;
-
   snapshotData: SnapshotData;
   activeAccordionPanel: number = 0;
+
+  activeNetworkIndex: number = 0;
+  activeContextIndex: number = 0;
+  activeExtensionIndex: number = 0;
 
   networkFilter: string;
   contextFilter: string;
   fileExtensionFilter: string;
 
-  allSnapshots: Snapshot[];
-  activeTheme: string;
+  private allSnapshots: Snapshot[];
 
   constructor(private snapshotService: SnapshotListService,
               private cdRef: ChangeDetectorRef,
@@ -38,34 +38,35 @@ export class SnapshotListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSnapshots();
-    this.activeTheme = localStorage.getItem('theme') || 'dark';
-    this.changeTheme(this.activeTheme);
   }
 
   private getSnapshots(): void {
     this.snapshotService.getSnapshots().subscribe((snapshotData: SnapshotData) => {
       this.snapshotData = snapshotData;
       this.allSnapshots = snapshotData.snapshots;
-      this.networkTabs = Array.from(snapshotData.networks);
-      const name = this.router.url.split('/')[1];
-      const snapshotFromUrl = this.allSnapshots.find(s => s.fileName === name);
-      if (snapshotFromUrl) {
-        this.networkFilter = snapshotFromUrl.network;
-        this.filterSnapshots();
-        this.activeAccordionPanel = this.snapshotData.snapshots.findIndex(s => s === snapshotFromUrl);
-      } else {
-        this.networkFilter = this.networkTabs[0];
-        this.updateRoute(this.activeAccordionPanel);
-        this.filterSnapshots();
-      }
-      this.activeButtonIndex = this.networkTabs.indexOf(this.networkFilter);
+      this.networkFilter = Array.from(snapshotData.networks)[0];
+      this.contextFilter = Array.from(snapshotData.contexts)[0];
+      this.fileExtensionFilter = Array.from(snapshotData.fileExtensions)[0];
+      console.log(snapshotData.snapshots);
+      // const name = this.router.url.split('/')[1];
+      // const snapshotFromUrl = this.allSnapshots.find(s => s.fileName === name);
+      // if (snapshotFromUrl) {
+      //   this.networkFilter = snapshotFromUrl.network;
+      // this.filterSnapshots();
+      // this.activeAccordionPanel = this.snapshotData.snapshots.findIndex(s => s === snapshotFromUrl);
+      // } else {
+      //   this.networkFilter = this.networkTabs[0];
+      // this.updateRoute(this.activeAccordionPanel);
+      // }
+      // this.activeNetworkIndex = this.networkTabs.indexOf(this.networkFilter);
 
+      // this.filterSnapshots();
       this.cdRef.detectChanges();
     });
   }
 
   private updateRoute(snapshotIndex): void {
-    this.router.navigate([this.snapshotData.snapshots[snapshotIndex].fileName]);
+    // this.router.navigate([this.snapshotData.snapshots[snapshotIndex].fileName]);
   }
 
   updateOpenAccordionElement(index: number): void {
@@ -89,19 +90,17 @@ export class SnapshotListComponent implements OnInit {
 
   filterByContext(context: string): void {
     if (context === this.contextFilter) {
-      this.contextFilter = undefined;
-    } else {
-      this.contextFilter = context;
+      return;
     }
+    this.contextFilter = context;
     this.filterSnapshots();
   }
 
   filterByExtension(extension: string): void {
     if (extension === this.fileExtensionFilter) {
-      this.fileExtensionFilter = undefined;
-    } else {
-      this.fileExtensionFilter = extension;
+      return;
     }
+    this.fileExtensionFilter = extension;
     this.filterSnapshots();
   }
 
@@ -111,13 +110,5 @@ export class SnapshotListComponent implements OnInit {
       && (this.contextFilter ? snapshot.context === this.contextFilter : true)
       && (this.fileExtensionFilter ? snapshot.fileExtension === this.fileExtensionFilter : true)
     );
-  }
-
-  changeTheme(theme: string): void {
-    localStorage.setItem('theme', theme);
-    this.activeTheme = theme;
-
-    document.body.classList.remove('theme-light', 'theme-dark');
-    document.body.classList.add('theme-' + theme);
   }
 }

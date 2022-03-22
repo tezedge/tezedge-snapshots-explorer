@@ -1,1 +1,14 @@
-<router-outlet></router-outlet>
+<div fxFlex="80px" class="flex-row w-100 align-start flex-between">
+  <div></div>
+  <h2 class="margin-remove">TEZOS GIGANODE SNAPSHOTS</h2>
+  <button class="theme-switcher f-12 margin-top-5 border-remove pointer flex-row align-center flex-center"
+          (click)="changeTheme(activeTheme === 'dark' ? 'light' : 'dark')">
+    <mat-icon *ngIf="activeTheme === 'dark'"
+              class="f-12 icon-16" svgIcon="sunny"></mat-icon>
+    <mat-icon *ngIf="activeTheme === 'light'"
+              class="f-12 icon-16" svgIcon="night"></mat-icon>
+  </button>
+</div>
+<div fxFlex="calc(100% - 80px)">
+  <router-outlet></router-outlet>
+</div>

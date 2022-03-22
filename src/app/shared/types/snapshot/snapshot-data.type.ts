@@ -5,5 +5,4 @@ export interface SnapshotData {
   contexts: Set<string>;
   fileExtensions: Set<string>;
   snapshots: Snapshot[];
-  stats: { name: string, value: number }[];
 }

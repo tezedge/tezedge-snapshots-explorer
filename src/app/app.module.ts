@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ICONS_PROVIDER } from './core/icon-register.service';
 import { THEME_PROVIDER } from './core/theme-switcher.service';
+import { MatIconModule } from '@angular/material/icon';
+import { FlexModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { THEME_PROVIDER } from './core/theme-switcher.service';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatIconModule,
+    FlexModule
   ],
   providers: [
     ICONS_PROVIDER,

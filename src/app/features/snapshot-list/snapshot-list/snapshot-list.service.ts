@@ -23,32 +23,20 @@ export class SnapshotListService {
           networks: new Set<string>(),
           contexts: new Set<string>(),
           fileExtensions: new Set<string>(),
-          snapshots: [],
-          stats: []
+          snapshots: []
         };
         return this.findFilesInNetworks(networks, data).pipe(
           map(() => data)
         );
       }),
       map((snapshotData: SnapshotData) => {
-
         const data: SnapshotData = {
           networks: new Set(Array.from(snapshotData.networks).sort()),
           contexts: new Set(Array.from(snapshotData.contexts).sort()),
-          fileExtensions: new Set(Array.from(snapshotData.fileExtensions).sort()),
+          fileExtensions: new Set(Array.from(snapshotData.fileExtensions).sort().reverse()),
           snapshots: snapshotData.snapshots.sort((s1, s2) => Date.parse(s2.datetime.toString()) - Date.parse(s1.datetime.toString()))
-            .map(snapshot => ({ ...snapshot, datetime: this.formatDate(snapshot.datetime as Date) })),
-          stats: []
+            .map(snapshot => ({ ...snapshot, datetime: SnapshotListService.formatDate(snapshot.datetime as Date) }))
         };
-        data.networks.forEach(network => {
-          data.stats.push({ name: network, value: data.snapshots.filter(s => s.network === network).length });
-        });
-        data.contexts.forEach(context => {
-          data.stats.push({ name: context, value: data.snapshots.filter(s => s.context === context).length });
-        });
-        data.fileExtensions.forEach(extension => {
-          data.stats.push({ name: extension, value: data.snapshots.filter(s => s.fileExtension === extension).length });
-        });
 
         return data;
       })
@@ -85,7 +73,7 @@ export class SnapshotListService {
         files
           .filter(file => file.type === 'file' && !file.name.includes('.temp'))
           .map(file => ({
-            datetime: this.getDate(file.name.split('_')[2]),
+            datetime: SnapshotListService.getDate(file.name.split('_')[2]),
             type: file.type,
             fileName: file.name,
             size: file.size,
@@ -104,7 +92,7 @@ export class SnapshotListService {
     );
   }
 
-  private getDate(value: string): Date {
+  private static getDate(value: string): Date {
     const year = Number(value.substring(0, 4));
     const month = Number(value.substring(4, 6)) - 1;
     const day = Number(value.substring(6, 8));
@@ -115,7 +103,7 @@ export class SnapshotListService {
     return new Date(year, month, day, hour, minute, second);
   }
 
-  private formatDate(date: Date): string {
+  private static formatDate(date: Date): string {
     const dateString = date.toISOString().replace('T', ', ');
     return dateString.substring(0, dateString.indexOf('.'));
   }

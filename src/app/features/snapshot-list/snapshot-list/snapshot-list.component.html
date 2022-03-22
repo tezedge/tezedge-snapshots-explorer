@@ -1,32 +1,8 @@
 <div class="flex-row flex-center align-center margin-top-10 p-absolute w-100vw h-100vh foreground-7"
      *ngIf="!snapshotData">Loading ...
 </div>
-<div class="flex-column h-100" *ngIf="snapshotData">
-  <div class="title-wrapper flex-column w-100">
-    <div fxFlex="80px" class="flex-row flex-end">
-      <button class="theme-switcher f-12 margin-top-5 border-remove pointer flex-row align-center flex-center"
-              (click)="changeTheme(activeTheme === 'dark' ? 'light' : 'dark')">
-        <mat-icon *ngIf="activeTheme === 'dark'"
-                  class="f-12 icon-16" svgIcon="sunny"></mat-icon>
-        <mat-icon *ngIf="activeTheme === 'light'"
-                  class="f-12 icon-16" svgIcon="night"></mat-icon>
-      </button>
-    </div>
-    <div fxFlex="70px"
-         fxLayout.gt-sm="row" fxLayout.lt-sm="column"
-         fxLayoutAlign.gt-sm="space-between center" fxLayoutAlign.lt-sm="space-between start">
-      <h2 class="margin-remove">Snapshots</h2>
-      <div class="button-toggle-group p-relative"
-           [ngClass]="'active-' + activeButtonIndex">
-        <button *ngFor="let network of snapshotData.networks; let i=index"
-                class="font-600 pointer f-12 text-uppercase" [class.active]="i === activeButtonIndex"
-                (click)="activeButtonIndex = i; filterByNetwork(network)">{{ network }}</button>
-      </div>
-    </div>
-
-    <div fxFlex="65px"
-         fxLayout.gt-md="row" fxLayout.lt-md="column"
-         fxLayoutAlign.gt-md="space-between center" fxLayoutAlign.lt-md="space-between start"
+<!--
+    <div fxFlex="65px" fxLayout="row" fxLayoutAlign="space-between center"
          class="f-12">
       <div class="flex-row align-center">
         <div class="chip pointer text-uppercase"
@@ -56,23 +32,95 @@
           </span>
           <div fxFlex class="flex-row flex-center">{{ extension }}</div>
         </div>
-        <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
-        <div>{{ snapshotData.snapshots.length }} snapshots</div>
       </div>
-      <div class="stats flex-row align-center border-rad-4 margin-top-10 margin-bottom-10">
-        <span class="foreground-7 margin-right-5">Total Snapshots</span>
-        <span class="foreground">{{ allSnapshots.length }}</span>
-        <span class="padding-horizontal-10 foreground-4">·</span>
-        <span *ngFor="let stat of snapshotData.stats; let i=index"
-              class="text-capitalize">
-          <span *ngIf="i !== 0" class="padding-horizontal-10 foreground-4">·</span>
-          <span class="foreground-7 margin-right-5">{{ stat.name }}</span>
-          <span class="foreground">{{ stat.value }}</span>
+    </div>-->
+<div class="flex-column h-100" *ngIf="snapshotData">
+  <div fxFlex="calc(100% - 40px)"
+       class="steps-container flex-column align-start w-100 foreground overflow-y-auto">
+<!--    <h3 class="font-600 f-16">1. CHOOSE NETWORK</h3>
+    <div class="button-toggle-group p-relative"
+         [ngClass]="'active-' + activeNetworkIndex">
+      <button *ngFor="let network of snapshotData.networks; let i=index"
+              class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeNetworkIndex"
+              (click)="activeNetworkIndex = i; filterByNetwork(network)">{{ network }}</button>
+    </div>
+    <p>Selected network is
+      <span class="font-500">{{ networkFilter }}</span>
+    </p>
+    <h3 class="font-600 f-16">2. CHOOSE CONTEXT</h3>
+    <div class="button-toggle-group p-relative"
+         [ngClass]="'active-' + activeContextIndex">
+      <button *ngFor="let context of snapshotData.contexts; let i=index"
+              class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeContextIndex"
+              (click)="activeContextIndex = i; filterByContext(context)">{{ context }}</button>
+    </div>
+    <p>Selected context is
+      <span class="font-500">{{ contextFilter }}</span>
+    </p>
+    <h3 class="font-600 f-16">3. CHOOSE VERSION</h3>
+    <div class="button-toggle-group p-relative"
+         [ngClass]="'active-' + activeExtensionIndex">
+      <button *ngFor="let extension of snapshotData.fileExtensions; let i=index"
+              class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeExtensionIndex"
+              (click)="activeExtensionIndex = i; filterByExtension(extension)">{{ extension }}</button>
+    </div>
+    <p>Selected version is
+      <span class="font-500">{{ fileExtensionFilter }}</span>
+    </p>
+    <h3 class="font-600 f-16">4. RUN IN TERMINAL</h3>-->
+    <div class="w-100 snapshot-element" *ngFor="let snapshot of snapshotData.snapshots; let i=index">
+      <div class="f-12 name text-break-all">{{ snapshot.fileName }}</div>
+      <div class="grid-like">
+        <span>Network:</span>
+        <span>{{ snapshot.network }}</span>
+      </div>
+      <div class="grid-like">
+        <span>Context:</span>
+        <span>{{ snapshot.context }}</span>
+      </div>
+      <div class="grid-like">
+        <span>Snapshot:</span>
+        <span>{{ snapshot.fileExtension }}</span>
+      </div>
+      <div class="grid-like">
+        <span>Date:</span>
+        <span>{{ snapshot.datetime }}</span>
+      </div>
+      <div class="grid-like">
+        <span>Block hash:</span>
+        <span>{{ snapshot.hash }}</span>
+      </div>
+      <div class="grid-like">
+        <span>Size:</span>
+        <span>{{ snapshot.size / 1073741824 | number: '1.2-2' }} GB</span>
+      </div>
+      <div class="grid-like">
+        <span>Download link:</span>
+        <span><a [href]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"
+                 (click)="$event.stopPropagation()"
+                 class="truncate">{{ snapshot.fileName }}</a>
         </span>
+      </div>
+      <div class="clone-sample margin-top-10 padding-10 f-12 flex-column align-start">
+        <div class="code text-break-all">
+          <div>
+            # To restore {{ snapshot.network }} full snapshot from {{ snapshot.datetime }},
+            blockhash: {{ snapshot.hash }} execute the following command:
+          </div>
+          <div #codeCmd1 style="color: #ff7300">
+            light-node import-snapshot --from {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
+          </div>
+        </div>
+        <div [cdkCopyToClipboard]="codeCmd1.textContent"
+             (click)="copyToClipboard()"
+             class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-2 font-600 flex-row align-center">
+          <span>Copy to clipboard</span>
+          <mat-icon svgIcon="clipboard" class="icon-12 margin-left-5"></mat-icon>
+        </div>
       </div>
     </div>
   </div>
-  <div fxFlex="calc(100% - 80px - 70px - 25px)" class="overflow-auto">
+  <div *ngIf="false" fxFlex="calc(100% - 80px - 70px - 25px)" class="overflow-auto">
     <div class="snapshots-wrapper">
       <mat-accordion *ngIf="snapshotData">
         <mat-expansion-panel *ngFor="let snapshot of snapshotData.snapshots; let i=index"
