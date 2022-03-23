@@ -1,246 +1,116 @@
 <div class="flex-row flex-center align-center margin-top-10 p-absolute w-100vw h-100vh foreground-7"
      *ngIf="!snapshotData">Loading ...
 </div>
-<div *ngIf="snapshotData" fxFlex="65px"
-     class="f-12 w-100 filters-wrapper flex-row align-center">
-  <div class="flex-row align-center filters-row w-100 foreground">
-    <span class="f-14 margin-right-10">Filters:</span>
-    <div class="chip pointer text-uppercase gray"
-         [class.margin-right-10]="i !== snapshotData.networks.length - 1"
-         [style.opacity]="networkFilter.includes(network) ? 1 : 0.6"
-         (click)="filterByNetwork(network)"
-         *ngFor="let network of snapshotData.networks; let i=index">
-      <span fxFlex="14px" class="d-flex align-center"
-            [style.opacity]="networkFilter.includes(network) ? 1 : 0">
-        <mat-icon svgIcon="check"
-                  class="icon-12"></mat-icon>
-      </span>
-      <div fxFlex class="flex-row flex-center">{{ network }}</div>
+<div fxFlex.gt-md="65px" fxFlex.lt-lg="170px" class="p-relative border-bottom" *ngIf="snapshotData">
+  <div fxLayout.lt-lg="column" fxLayout.gt-md="row" class="title-row flex-between w-100 align-center">
+    <h2 class="margin-remove">TezEdge Snapshots</h2>
+    <div class="flex-row f-12 align-center foreground-4 flex-wrap">
+      <div class="flex-row align-center">
+        <span class="margin-right-10">Network</span>
+        <div class="chip pointer text-capitalize margin-right-10"
+             [class.active]="networkFilter.includes(network)"
+             (click)="filterByNetwork(network)"
+             *ngFor="let network of snapshotData.networks; let i=index">
+          <mat-icon [style.width.px]="networkFilter.includes(network) ? 12 : 0"
+                    svgIcon="check-circle"
+                    class="icon-12 margin-right-5"></mat-icon>
+          <div class="flex-row flex-center filter-text">{{ network }}</div>
+        </div>
+      </div>
+      <div class="flex-row align-center">
+        <span class="margin-right-10">Context</span>
+        <div class="chip pointer text-capitalize margin-right-10"
+             [class.active]="contextFilter.includes(context)"
+             (click)="filterByContext(context)"
+             *ngFor="let context of snapshotData.contexts; let i=index">
+          <mat-icon [style.width.px]="contextFilter.includes(context) ? 12 : 0"
+                    svgIcon="check-circle"
+                    class="icon-12 margin-right-5"></mat-icon>
+          <div class="flex-row flex-center filter-text">{{ context }}</div>
+        </div>
+      </div>
+      <div class="flex-row align-center">
+        <span class="margin-right-10">Version</span>
+        <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
+             class="chip pointer text-capitalize margin-right-10"
+             [class.active]="fileExtensionFilter.includes(extension)"
+             (click)="filterByExtension(extension)">
+          <mat-icon [style.width.px]="fileExtensionFilter.includes(extension) ? 12 : 0"
+                    svgIcon="check-circle"
+                    class="icon-12 margin-right-5"></mat-icon>
+          <div class="flex-row flex-center filter-text">{{ extension }}</div>
+        </div>
+      </div>
     </div>
-    <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
-    <div class="chip pointer text-uppercase gray"
-         [class.margin-right-10]="i !== snapshotData.contexts.length - 1"
-         [style.opacity]="contextFilter.includes(context) ? 1 : 0.6"
-         (click)="filterByContext(context)"
-         *ngFor="let context of snapshotData.contexts; let i=index">
-      <span fxFlex="14px" class="d-flex align-center"
-            [style.opacity]="contextFilter.includes(context) ? 1 : 0">
-        <mat-icon svgIcon="check"
-                  class="icon-12"></mat-icon>
-      </span>
-      <div fxFlex class="flex-row flex-center">{{ context }}</div>
-    </div>
-    <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
-    <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
-         class="chip pointer text-uppercase gray"
-         [class.margin-right-10]="i !== snapshotData.fileExtensions.length - 1"
-         [style.opacity]="fileExtensionFilter.includes(extension) ? 1 : 0.6"
-         (click)="filterByExtension(extension)">
-      <span fxFlex="14px" class="d-flex align-center"
-            [style.opacity]="fileExtensionFilter.includes(extension) ? 1 : 0">
-        <mat-icon svgIcon="check"
-                  class="icon-12"></mat-icon>
-      </span>
-      <div fxFlex class="flex-row flex-center">{{ extension }}</div>
-    </div>
+    <button class="theme-switcher p-absolute f-12 margin-top-5 border-remove pointer flex-row align-center flex-center"
+            (click)="changeTheme(activeTheme === 'dark' ? 'light' : 'dark')">
+      <mat-icon *ngIf="activeTheme === 'dark'"
+                class="f-12 icon-16" svgIcon="sunny"></mat-icon>
+      <mat-icon *ngIf="activeTheme === 'light'"
+                class="f-12 icon-16" svgIcon="night"></mat-icon>
+    </button>
   </div>
 </div>
-<div fxFlex="calc(100% - 65px)" *ngIf="snapshotData">
-  <div class="snapshots-container flex-column align-start w-100 foreground overflow-y-scroll h-100">
-    <!--    <h3 class="font-600 f-16">1. CHOOSE NETWORK</h3>
-        <div class="button-toggle-group p-relative"
-             [ngClass]="'active-' + activeNetworkIndex">
-          <button *ngFor="let network of snapshotData.networks; let i=index"
-                  class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeNetworkIndex"
-                  (click)="activeNetworkIndex = i; filterByNetwork(network)">{{ network }}</button>
-        </div>
-        <p>Selected network is
-          <span class="font-500">{{ networkFilter }}</span>
-        </p>
-        <h3 class="font-600 f-16">2. CHOOSE CONTEXT</h3>
-        <div class="button-toggle-group p-relative"
-             [ngClass]="'active-' + activeContextIndex">
-          <button *ngFor="let context of snapshotData.contexts; let i=index"
-                  class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeContextIndex"
-                  (click)="activeContextIndex = i; filterByContext(context)">{{ context }}</button>
-        </div>
-        <p>Selected context is
-          <span class="font-500">{{ contextFilter }}</span>
-        </p>
-        <h3 class="font-600 f-16">3. CHOOSE VERSION</h3>
-        <div class="button-toggle-group p-relative"
-             [ngClass]="'active-' + activeExtensionIndex">
-          <button *ngFor="let extension of snapshotData.fileExtensions; let i=index"
-                  class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeExtensionIndex"
-                  (click)="activeExtensionIndex = i; filterByExtension(extension)">{{ extension }}</button>
-        </div>
-        <p>Selected version is
-          <span class="font-500">{{ fileExtensionFilter }}</span>
-        </p>
-        <h3 class="font-600 f-16">4. RUN IN TERMINAL</h3>-->
-    <div class="w-100 snapshot-element" *ngFor="let snapshot of snapshotData.snapshots; let i=index">
-      <div class="f-12 name text-break-all">{{ snapshot.fileName }}</div>
-      <div class="grid-like">
-        <span>Network:</span>
-        <span>{{ snapshot.network }}</span>
-      </div>
-      <div class="grid-like">
-        <span>Context:</span>
-        <span>{{ snapshot.context }}</span>
-      </div>
-      <div class="grid-like">
-        <span>Snapshot:</span>
-        <span>{{ snapshot.fileExtension }}</span>
-      </div>
-      <div class="grid-like">
-        <span>Date:</span>
-        <span>{{ snapshot.datetime }}</span>
-      </div>
-      <div class="grid-like">
-        <span>Block hash:</span>
-        <span>{{ snapshot.hash }}</span>
-      </div>
-      <div class="grid-like">
-        <span>Size:</span>
-        <span>{{ snapshot.size / 1073741824 | number: '1.2-2' }} GB</span>
-      </div>
-      <div class="grid-like">
-        <span>Download link:</span>
-        <span>
-          <a (click)="$event.stopPropagation()"
-             [href]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"
-             class="truncate">{{ snapshot.fileName }}</a>
-        </span>
-      </div>
-      <div class="clone-sample margin-top-10 padding-10 f-12 flex-column align-start border-rad-2">
-        <div class="code text-break-all">
-          <div>
-            # To restore {{ snapshot.network }} full snapshot from {{ snapshot.datetime }},
-            blockhash: {{ snapshot.hash }} execute the following command:
+
+<div *ngIf="snapshotData" fxFlex.gt-md="calc(100% - 65px)" fxFlex.lt-lg="calc(100% - 170px)">
+  <div class="snapshots-container w-100 foreground overflow-y-scroll h-100">
+    <div class="snapshot-item-wrapper w-100 flex-column align-start">
+      <div *ngFor="let snapshot of snapshotData.snapshots; let i=index"
+           class="snapshot-item w-100 border border-rad-4">
+        <div class="name text-break-all font-600 border-bottom">{{ snapshot.fileName }}</div>
+        <div class="snapshot-content flex-column f-14 foreground">
+          <div class="grid-like">
+            <span class="foreground-4 margin-right-10">Network:</span>
+            <span>{{ snapshot.network }}</span>
           </div>
-          <div #code style="color: #ff7300">
-            light-node import-snapshot
-            --from {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
+          <div class="grid-like">
+            <span class="foreground-4 margin-right-10">Context:</span>
+            <span>{{ snapshot.context }}</span>
           </div>
-        </div>
-        <div [cdkCopyToClipboard]="code.textContent"
-             (click)="copyToClipboard()"
-             class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-2 font-600 flex-row align-center">
-          <span>Copy to clipboard</span>
-          <mat-icon svgIcon="clipboard" class="icon-12 margin-left-5"></mat-icon>
+          <div class="grid-like">
+            <span class="foreground-4 margin-right-10">Snapshot:</span>
+            <span>{{ snapshot.fileExtension }}</span>
+          </div>
+          <div class="grid-like">
+            <span class="foreground-4 margin-right-10">Date:</span>
+            <span>{{ snapshot.datetime }}</span>
+          </div>
+          <div class="grid-like">
+            <span class="foreground-4 margin-right-10">Block hash:</span>
+            <span class="text-break-all">{{ snapshot.hash }}</span>
+          </div>
+          <div class="grid-like">
+            <span class="foreground-4 margin-right-10">Size:</span>
+            <span>{{ snapshot.size / 1073741824 | number: '1.2-2' }} GB</span>
+          </div>
+          <div class="grid-like">
+            <span class="foreground-4 margin-right-10">Download link:</span>
+            <span>
+              <a (click)="$event.stopPropagation()"
+                 [href]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"
+                 class="text-break-all">{{ snapshot.fileName }}</a>
+            </span>
+          </div>
+          <div class="clone-sample margin-top-10 padding-10 f-12 flex-column align-start">
+            <div class="code text-break-all">
+              <div class="foreground-4">
+                # To restore {{ snapshot.network }} full snapshot from {{ snapshot.datetime }},
+                blockhash: {{ snapshot.hash }} execute the following command:
+              </div>
+              <br>
+              <div #code class="foreground-9">
+                light-node import-snapshot
+                --from {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
+              </div>
+            </div>
+            <div [cdkCopyToClipboard]="code.textContent"
+                 (click)="copyToClipboard()"
+                 class="copy-button pointer padding-10 border-rad-2 f-12 font-600 flex-row align-center">
+              <span>COPY TO CLIPBOARD</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!--  <div *ngIf="false" fxFlex="calc(100% - 80px - 70px - 25px)" class="overflow-auto">-->
-  <!--    <div class="snapshots-wrapper">-->
-  <!--      <mat-accordion *ngIf="snapshotData">-->
-  <!--        <mat-expansion-panel *ngFor="let snapshot of snapshotData.snapshots; let i=index"-->
-  <!--                             hideToggle [expanded]="activeAccordionPanel === i" [disabled]="activeAccordionPanel === i"-->
-  <!--                             (click)="updateOpenAccordionElement(i)">-->
-  <!--          <mat-expansion-panel-header>-->
-  <!--            <mat-panel-title class="flex-column accordion-paddings w-100">-->
-  <!--              <div class="content-truncate flex-column align-stretch border-top w-100" [class.border-remove]="i === 0">-->
-  <!--                <div class="padding-top-8 margin-bottom-5 f-12">{{ snapshot.datetime }}</div>-->
-  <!--                <div class="row-content flex-row align-center f-12 padding-top-10 margin-bottom-10 align-center"-->
-  <!--                     [class.open]="activeAccordionPanel === i">-->
-  <!--                  <div fxFlex="200px" class="d-flex chips">-->
-  <!--                    <div class="chip margin-right-10 text-uppercase"-->
-  <!--                         [class.blue]="i % 2 === 0"-->
-  <!--                         [class.green]="i % 2 !== 0"-->
-  <!--                         [class.d-none]="snapshot.context !== context"-->
-  <!--                         *ngFor="let context of snapshotData.contexts; let i=index">-->
-  <!--                      <div>{{ context }}</div>-->
-  <!--                    </div>-->
-  <!--                    <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"-->
-  <!--                         class="chip gray margin-right-10 text-uppercase"-->
-  <!--                         [class.white]="i % 2 === 0"-->
-  <!--                         [class.gray]="i % 2 !== 0"-->
-  <!--                         [class.d-none]="snapshot.fileExtension !== extension">-->
-  <!--                      <div>{{ extension }}</div>-->
-  <!--                    </div>-->
-  <!--                  </div>-->
-  <!--                  <div fxFlex="calc(100% - 200px - 20px)" class="flex-row align-center">-->
-  <!--                    <a class="truncate"-->
-  <!--                       (click)="$event.stopPropagation()"-->
-  <!--                       [href]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"-->
-  <!--                       [matTooltip]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"-->
-  <!--                       matTooltipShowDelay="1000"-->
-  <!--                       #downloadAnchor>{{ snapshot.fileName }}</a>-->
-  <!--                    <span class="download-btn border-rad-2 margin-left-5 flex-center pointer"-->
-  <!--                          fxFlex="22px"-->
-  <!--                          (click)="downloadAnchor.click(); $event.stopPropagation()"-->
-  <!--                          matTooltip="Download">-->
-  <!--                      <mat-icon svgIcon="arrow-down" class="icon-12"></mat-icon>-->
-  <!--                    </span>-->
-  <!--                  </div>-->
-  <!--                  <mat-icon fxFlex="20px" svgIcon="chevron-right" class="icon-14 panel-arrow"-->
-  <!--                            [class.open]="activeAccordionPanel === i"></mat-icon>-->
-  <!--                </div>-->
-  <!--              </div>-->
-  <!--            </mat-panel-title>-->
-  <!--          </mat-expansion-panel-header>-->
-  <!--          <ng-template matExpansionPanelContent>-->
-  <!--            <div class="f-12 content-truncate body padding-left-remove">-->
-  <!--              <div class="d-flex flex-between">-->
-  <!--                <div class="foreground-7">Network</div>-->
-  <!--                <div>{{ snapshot.network }}</div>-->
-  <!--              </div>-->
-  <!--              <div class="d-flex flex-between">-->
-  <!--                <div class="foreground-7 text-nowrap margin-right-10">Snapshot time</div>-->
-  <!--                <div>{{ snapshot.datetime }}</div>-->
-  <!--              </div>-->
-  <!--              <div class="d-flex flex-between">-->
-  <!--                <div class="foreground-7 text-nowrap margin-right-10">Block hash</div>-->
-  <!--                <div class="truncate">{{ snapshot.hash }}</div>-->
-  <!--              </div>-->
-  <!--              <div class="d-flex flex-between">-->
-  <!--                <div class="foreground-7">Context</div>-->
-  <!--                <div>{{ snapshot.context }}</div>-->
-  <!--              </div>-->
-  <!--              <div class="d-flex flex-between">-->
-  <!--                <div class="foreground-7 text-nowrap margin-right-10">Snapshot type</div>-->
-  <!--                <div>{{ snapshot.fileExtension }}</div>-->
-  <!--              </div>-->
-  <!--            </div>-->
-  <!--            <div class="content-truncate">-->
-  <!--              <div class="clone-sample margin-top-10 margin-bottom-10 padding-10 f-12 d-flex align-start flex-between">-->
-  <!--                <div class="code truncate">-->
-  <!--                  <div>-->
-  <!--                    # To restore {{ snapshot.network }} full snapshot from {{ snapshot.network }},-->
-  <!--                    blockhash: {{ snapshot.hash }}-->
-  <!--                  </div>-->
-  <!--                  <div #codeCmd1 style="color: #ff7300">-->
-  <!--                    wget {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}-->
-  <!--                  </div>-->
-  <!--                </div>-->
-  <!--                <div [cdkCopyToClipboard]="codeCmd1.textContent"-->
-  <!--                     (click)="copyToClipboard()"-->
-  <!--                     class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-2 font-600 flex-row align-center">-->
-  <!--                  <span>Copy</span>-->
-  <!--                  <mat-icon svgIcon="clipboard" class="icon-12 margin-left-5"></mat-icon>-->
-  <!--                </div>-->
-  <!--              </div>-->
-  <!--            </div>-->
-  <!--            <div class="content-truncate">-->
-  <!--              <div class="clone-sample margin-top-10 margin-bottom-10 padding-10 f-12 d-flex align-start flex-between">-->
-  <!--                <div class="code truncate">-->
-  <!--                  <div #codeCmd2 style="color: #ff7300">-->
-  <!--                    light-node &#45;&#45;network {{ snapshot.network }} import-snapshot &#45;&#45;from {{ snapshot.fileName}}-->
-  <!--                  </div>-->
-  <!--                </div>-->
-  <!--                <div [cdkCopyToClipboard]="codeCmd2.textContent"-->
-  <!--                     (click)="copyToClipboard()"-->
-  <!--                     class="copy-button pointer padding-10 padding-top-8 padding-bottom-8 border-rad-2 font-600 flex-row align-center">-->
-  <!--                  <span>Copy</span>-->
-  <!--                  <mat-icon svgIcon="clipboard" class="icon-12 margin-left-5"></mat-icon>-->
-  <!--                </div>-->
-  <!--              </div>-->
-  <!--            </div>-->
-  <!--          </ng-template>-->
-  <!--        </mat-expansion-panel>-->
-  <!--      </mat-accordion>-->
-  <!--    </div>-->
-  <!--  </div>-->
-
 </div>

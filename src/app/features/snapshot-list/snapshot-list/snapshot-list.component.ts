@@ -16,6 +16,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 export class SnapshotListComponent implements OnInit {
 
   readonly API = environment.api;
+  activeTheme: string;
 
   snapshotData: SnapshotData;
   activeAccordionPanel: number = 0;
@@ -31,6 +32,8 @@ export class SnapshotListComponent implements OnInit {
               private snack: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.activeTheme = localStorage.getItem('theme') || 'dark';
+    this.changeTheme(this.activeTheme);
     this.getSnapshots();
   }
 
@@ -106,5 +109,13 @@ export class SnapshotListComponent implements OnInit {
       && (this.contextFilter.length ? this.contextFilter.includes(snapshot.context) : true)
       && (this.fileExtensionFilter.length ? this.fileExtensionFilter.includes(snapshot.fileExtension) : true)
     );
+  }
+
+  changeTheme(theme: string): void {
+    localStorage.setItem('theme', theme);
+    this.activeTheme = theme;
+
+    document.body.classList.remove('theme-light', 'theme-dark');
+    document.body.classList.add('theme-' + theme);
   }
 }

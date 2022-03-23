@@ -28,7 +28,7 @@ const LIGHT_THEME: Theme = {
   cssVariables: {
     '--background-base': '#ffffff',
     '--background-surface': '#f5f5f5',
-    '--background-surface-fade-1': '#ffffff',
+    '--background-surface-fade-1': '#ececec',
     '--background-surface-fade-2': '#cacaca',
     '--background-surface-strong': '#dadada',
     '--foreground': 'rgb(27,27,29)',
@@ -40,6 +40,7 @@ const LIGHT_THEME: Theme = {
     '--foreground-7': 'rgba(27,27,29,0.7)',
     '--foreground-9': 'rgba(27,27,29,0.9)',
     '--active-surface': '#204e8a',
+    '--table-hovered-row-background': '#b7b7b7',
   }
 };
 
