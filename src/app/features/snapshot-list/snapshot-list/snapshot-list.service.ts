@@ -20,9 +20,9 @@ export class SnapshotListService {
       map(networks => networks.slice(0, -1).map(n => n.name)),
       switchMap(networks => {
         const data: SnapshotData = {
-          networks: new Set<string>(),
-          contexts: new Set<string>(),
-          fileExtensions: new Set<string>(),
+          networks: [],
+          contexts: [],
+          fileExtensions: [],
           snapshots: []
         };
         return this.findFilesInNetworks(networks, data).pipe(
@@ -31,10 +31,17 @@ export class SnapshotListService {
       }),
       map((snapshotData: SnapshotData) => {
         const data: SnapshotData = {
-          networks: new Set(Array.from(snapshotData.networks).sort()),
-          contexts: new Set(Array.from(snapshotData.contexts).sort()),
-          fileExtensions: new Set(Array.from(snapshotData.fileExtensions).sort().reverse()),
-          snapshots: snapshotData.snapshots.sort((s1, s2) => Date.parse(s2.datetime.toString()) - Date.parse(s1.datetime.toString()))
+          networks: snapshotData.networks.sort(),
+          contexts: snapshotData.contexts.sort(),
+          fileExtensions: snapshotData.fileExtensions.sort().reverse(),
+          snapshots: snapshotData.snapshots
+            .sort((s1, s2) => {
+              const result: number = Date.parse(s2.datetime.toString()) - Date.parse(s1.datetime.toString());
+              if (result === 0) {
+                return s2.fileExtension.toLowerCase().localeCompare(s1.fileExtension.toLowerCase());
+              }
+              return result;
+            })
             .map(snapshot => ({ ...snapshot, datetime: SnapshotListService.formatDate(snapshot.datetime as Date) }))
         };
 
@@ -84,9 +91,9 @@ export class SnapshotListService {
           } as Snapshot))
       ),
       map((snapshots: Snapshot[]) => {
-        data.networks.add(network);
-        data.contexts.add(context);
-        data.fileExtensions.add(extension);
+        data.networks = data.networks.includes(network) ? [...data.networks] : [network, ...data.networks];
+        data.contexts = data.contexts.includes(context) ? [...data.contexts] : [context, ...data.contexts];
+        data.fileExtensions = data.fileExtensions.includes(extension) ? [...data.fileExtensions] : [extension, ...data.fileExtensions];
         data.snapshots.push(...snapshots);
       })
     );

@@ -43,11 +43,11 @@ export class SnapshotListComponent implements OnInit {
   private getSnapshots(): void {
     this.snapshotService.getSnapshots().subscribe((snapshotData: SnapshotData) => {
       this.snapshotData = snapshotData;
+      console.log(snapshotData);
       this.allSnapshots = snapshotData.snapshots;
-      this.networkFilter = Array.from(snapshotData.networks)[0];
-      this.contextFilter = Array.from(snapshotData.contexts)[0];
-      this.fileExtensionFilter = Array.from(snapshotData.fileExtensions)[0];
-      console.log(snapshotData.snapshots);
+      // this.networkFilter = snapshotData.networks[0];
+      // this.contextFilter = snapshotData.contexts[0];
+      // this.fileExtensionFilter = snapshotData.fileExtensions[0];
       // const name = this.router.url.split('/')[1];
       // const snapshotFromUrl = this.allSnapshots.find(s => s.fileName === name);
       // if (snapshotFromUrl) {
@@ -82,25 +82,28 @@ export class SnapshotListComponent implements OnInit {
 
   filterByNetwork(network: string): void {
     if (network === this.networkFilter) {
-      return;
+      this.networkFilter = undefined;
+    } else {
+      this.networkFilter = network;
     }
-    this.networkFilter = network;
     this.filterSnapshots();
   }
 
   filterByContext(context: string): void {
     if (context === this.contextFilter) {
-      return;
+      this.contextFilter = undefined;
+    } else {
+      this.contextFilter = context;
     }
-    this.contextFilter = context;
     this.filterSnapshots();
   }
 
   filterByExtension(extension: string): void {
     if (extension === this.fileExtensionFilter) {
-      return;
+      this.fileExtensionFilter = undefined;
+    } else {
+      this.fileExtensionFilter = extension;
     }
-    this.fileExtensionFilter = extension;
     this.filterSnapshots();
   }
 

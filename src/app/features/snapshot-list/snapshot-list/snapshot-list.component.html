@@ -1,86 +1,114 @@
 <div class="flex-row flex-center align-center margin-top-10 p-absolute w-100vw h-100vh foreground-7"
      *ngIf="!snapshotData">Loading ...
 </div>
-<!--
-    <div fxFlex="65px" fxLayout="row" fxLayoutAlign="space-between center"
-         class="f-12">
-      <div class="flex-row align-center">
-        <div class="chip pointer text-uppercase"
-             [class.margin-right-10]="i !== snapshotData.contexts.size - 1"
-             [class.blue]="i % 2 === 0"
-             [class.green]="i % 2 !== 0"
-             [style.opacity]="contextFilter && contextFilter !== context ? 0.6 : 1"
-             (click)="filterByContext(context)"
-             *ngFor="let context of snapshotData.contexts; let i=index">
-          <span fxFlex="14px" class="d-flex align-center">
-            <mat-icon class="icon-12"
-                      [svgIcon]="(!contextFilter || contextFilter === context) ? 'check' : 'close-blank'"></mat-icon>
-          </span>
-          <div fxFlex class="flex-row flex-center">{{ context }}</div>
+<div *ngIf="snapshotData" fxFlex="65px"
+     class="f-12 w-100 filters-wrapper flex-row align-center">
+  <div class="flex-row align-center filters-row w-100 foreground">
+    <span class="f-14 margin-right-10">Filters:</span>
+    <div class="chip pointer text-uppercase"
+         [class.margin-right-10]="i !== snapshotData.networks.length - 1"
+         [class.purple]="i % 2 === 0"
+         [class.red]="i % 2 !== 0"
+         [style.opacity]="networkFilter && networkFilter !== network ? 0.6 : 1"
+         (click)="filterByNetwork(network)"
+         *ngFor="let network of snapshotData.networks; let i=index">
+      <span fxFlex="14px" class="d-flex align-center">
+        <mat-icon [svgIcon]="(!networkFilter || networkFilter === network) ? 'check' : 'close-blank'"
+                  class="icon-12"></mat-icon>
+      </span>
+      <div fxFlex class="flex-row flex-center">{{ network }}</div>
+    </div>
+    <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
+    <div class="chip pointer text-uppercase"
+         [class.margin-right-10]="i !== snapshotData.contexts.length - 1"
+         [class.blue]="i % 2 === 0"
+         [class.green]="i % 2 !== 0"
+         [style.opacity]="contextFilter && contextFilter !== context ? 0.6 : 1"
+         (click)="filterByContext(context)"
+         *ngFor="let context of snapshotData.contexts; let i=index">
+      <span fxFlex="14px" class="d-flex align-center">
+        <mat-icon [svgIcon]="(!contextFilter || contextFilter === context) ? 'check' : 'close-blank'"
+                  class="icon-12"></mat-icon>
+      </span>
+      <div fxFlex class="flex-row flex-center">{{ context }}</div>
+    </div>
+    <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
+    <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
+         class="chip pointer text-uppercase flex-row"
+         [class.margin-right-10]="i !== snapshotData.contexts.length - 1"
+         [class.white]="i % 2 === 0"
+         [class.gray]="i % 2 !== 0"
+         [style.opacity]="fileExtensionFilter && fileExtensionFilter !== extension ? 0.6 : 1"
+         (click)="filterByExtension(extension)">
+      <span fxFlex="14px" class="d-flex align-center">
+        <mat-icon [svgIcon]="(!fileExtensionFilter || fileExtensionFilter === extension) ? 'check' : 'close-blank'"
+                  class="icon-12"></mat-icon>
+      </span>
+      <div fxFlex class="flex-row flex-center">{{ extension }}</div>
+    </div>
+  </div>
+</div>
+<div fxFlex="calc(100% - 65px)" *ngIf="snapshotData">
+  <div class="steps-container flex-column align-start w-100 foreground overflow-y-auto h-100">
+    <!--    <h3 class="font-600 f-16">1. CHOOSE NETWORK</h3>
+        <div class="button-toggle-group p-relative"
+             [ngClass]="'active-' + activeNetworkIndex">
+          <button *ngFor="let network of snapshotData.networks; let i=index"
+                  class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeNetworkIndex"
+                  (click)="activeNetworkIndex = i; filterByNetwork(network)">{{ network }}</button>
         </div>
-        <div class="bar margin-left-10 margin-right-10 d-flex align-center font-300">|</div>
-        <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
-             class="chip pointer text-uppercase flex-row"
-             [class.margin-right-10]="i !== snapshotData.contexts.size - 1"
-             [class.white]="i % 2 === 0"
-             [class.gray]="i % 2 !== 0"
-             [style.opacity]="fileExtensionFilter && fileExtensionFilter !== extension ? 0.6 : 1"
-             (click)="filterByExtension(extension)">
-          <span fxFlex="14px" class="d-flex align-center">
-            <mat-icon [svgIcon]="(!fileExtensionFilter || fileExtensionFilter === extension) ? 'check' : 'close-blank'"
-                      class="icon-12"></mat-icon>
-          </span>
-          <div fxFlex class="flex-row flex-center">{{ extension }}</div>
+        <p>Selected network is
+          <span class="font-500">{{ networkFilter }}</span>
+        </p>
+        <h3 class="font-600 f-16">2. CHOOSE CONTEXT</h3>
+        <div class="button-toggle-group p-relative"
+             [ngClass]="'active-' + activeContextIndex">
+          <button *ngFor="let context of snapshotData.contexts; let i=index"
+                  class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeContextIndex"
+                  (click)="activeContextIndex = i; filterByContext(context)">{{ context }}</button>
         </div>
-      </div>
-    </div>-->
-<div class="flex-column h-100" *ngIf="snapshotData">
-  <div fxFlex="calc(100% - 40px)"
-       class="steps-container flex-column align-start w-100 foreground overflow-y-auto">
-<!--    <h3 class="font-600 f-16">1. CHOOSE NETWORK</h3>
-    <div class="button-toggle-group p-relative"
-         [ngClass]="'active-' + activeNetworkIndex">
-      <button *ngFor="let network of snapshotData.networks; let i=index"
-              class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeNetworkIndex"
-              (click)="activeNetworkIndex = i; filterByNetwork(network)">{{ network }}</button>
-    </div>
-    <p>Selected network is
-      <span class="font-500">{{ networkFilter }}</span>
-    </p>
-    <h3 class="font-600 f-16">2. CHOOSE CONTEXT</h3>
-    <div class="button-toggle-group p-relative"
-         [ngClass]="'active-' + activeContextIndex">
-      <button *ngFor="let context of snapshotData.contexts; let i=index"
-              class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeContextIndex"
-              (click)="activeContextIndex = i; filterByContext(context)">{{ context }}</button>
-    </div>
-    <p>Selected context is
-      <span class="font-500">{{ contextFilter }}</span>
-    </p>
-    <h3 class="font-600 f-16">3. CHOOSE VERSION</h3>
-    <div class="button-toggle-group p-relative"
-         [ngClass]="'active-' + activeExtensionIndex">
-      <button *ngFor="let extension of snapshotData.fileExtensions; let i=index"
-              class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeExtensionIndex"
-              (click)="activeExtensionIndex = i; filterByExtension(extension)">{{ extension }}</button>
-    </div>
-    <p>Selected version is
-      <span class="font-500">{{ fileExtensionFilter }}</span>
-    </p>
-    <h3 class="font-600 f-16">4. RUN IN TERMINAL</h3>-->
+        <p>Selected context is
+          <span class="font-500">{{ contextFilter }}</span>
+        </p>
+        <h3 class="font-600 f-16">3. CHOOSE VERSION</h3>
+        <div class="button-toggle-group p-relative"
+             [ngClass]="'active-' + activeExtensionIndex">
+          <button *ngFor="let extension of snapshotData.fileExtensions; let i=index"
+                  class="font-600 pointer f-14 text-uppercase" [class.active]="i === activeExtensionIndex"
+                  (click)="activeExtensionIndex = i; filterByExtension(extension)">{{ extension }}</button>
+        </div>
+        <p>Selected version is
+          <span class="font-500">{{ fileExtensionFilter }}</span>
+        </p>
+        <h3 class="font-600 f-16">4. RUN IN TERMINAL</h3>-->
     <div class="w-100 snapshot-element" *ngFor="let snapshot of snapshotData.snapshots; let i=index">
       <div class="f-12 name text-break-all">{{ snapshot.fileName }}</div>
       <div class="grid-like">
         <span>Network:</span>
-        <span>{{ snapshot.network }}</span>
+        <div class="flex-row align-center">
+          <div class="chip margin-right-10 text-uppercase text-center d-inline-block"
+               [ngClass]="snapshotData.networks.indexOf(snapshot.network) % 2 === 0 ? 'purple' : 'red'">
+            <div>{{ snapshot.network }}</div>
+          </div>
+        </div>
       </div>
       <div class="grid-like">
         <span>Context:</span>
-        <span>{{ snapshot.context }}</span>
+        <div class="flex-row align-center">
+          <div class="chip margin-right-10 text-uppercase text-center d-inline-block"
+               [ngClass]="snapshotData.contexts.indexOf(snapshot.context) % 2 === 0 ? 'blue' : 'green'">
+            <div>{{ snapshot.context }}</div>
+          </div>
+        </div>
       </div>
       <div class="grid-like">
         <span>Snapshot:</span>
-        <span>{{ snapshot.fileExtension }}</span>
+        <div class="flex-row align-center">
+          <div class="chip margin-right-10 text-uppercase text-center d-inline-block"
+               [ngClass]="snapshotData.fileExtensions.indexOf(snapshot.fileExtension) % 2 === 0 ? 'white' : 'gray'">
+            <div>{{ snapshot.fileExtension }}</div>
+          </div>
+        </div>
       </div>
       <div class="grid-like">
         <span>Date:</span>
@@ -96,9 +124,11 @@
       </div>
       <div class="grid-like">
         <span>Download link:</span>
-        <span><a [href]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"
-                 (click)="$event.stopPropagation()"
-                 class="truncate">{{ snapshot.fileName }}</a>
+        <span>
+          <a
+            [href]="API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName"
+            (click)="$event.stopPropagation()"
+            class="truncate">{{ snapshot.fileName }}</a>
         </span>
       </div>
       <div class="clone-sample margin-top-10 padding-10 f-12 flex-column align-start">
@@ -108,7 +138,8 @@
             blockhash: {{ snapshot.hash }} execute the following command:
           </div>
           <div #codeCmd1 style="color: #ff7300">
-            light-node import-snapshot --from {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
+            light-node import-snapshot
+            --from {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
           </div>
         </div>
         <div [cdkCopyToClipboard]="codeCmd1.textContent"

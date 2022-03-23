@@ -21,6 +21,23 @@ a {
   }
 }
 
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.filters-wrapper {
+  padding-right: 12px;
+}
+
+.filters-row {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
 .snapshot-element {
   max-width: 1300px;
   margin: 0 auto;
@@ -40,9 +57,20 @@ a {
 
     .grid-like {
       font-size: 12px;
-      line-height: 18px;
       display: grid;
       grid-template-columns: 100px 1fr;
+
+      span {
+        line-height: 24px;
+      }
+
+      > div:first-child {
+        height: 24px;
+      }
+
+      .chip > div {
+        line-height: 19px;
+      }
     }
 
     .clone-sample {
@@ -79,7 +107,19 @@ a {
   min-width: 70px;
   border: 1px solid;
 
-  @include flexRowCenter();
+  @include flexRowVertCenter();
+
+  &.purple {
+    border-color: #bf5af2;
+    background-color: #bf5af2;
+    @include styleIcon(#fff);
+  }
+
+  &.red {
+    border-color: rgb(211, 15, 69);
+    background: rgb(211, 15, 69);
+    @include styleIcon(#fff);
+  }
 
   &.blue {
     border-color: #006bd6;
@@ -101,7 +141,7 @@ a {
 
   &.gray {
     color: $foreground;
-    border-color: $foreground-2;
+    border-color: $foreground-4;
   }
 
   &:hover {

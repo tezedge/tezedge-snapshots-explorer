@@ -1,8 +1,8 @@
 import { Snapshot } from '@shared/types/snapshot/snapshot.type';
 
 export interface SnapshotData {
-  networks: Set<string>;
-  contexts: Set<string>;
-  fileExtensions: Set<string>;
+  networks: string[];
+  contexts: string[];
+  fileExtensions: string[];
   snapshots: Snapshot[];
 }
