@@ -4,7 +4,6 @@ import { SnapshotListService } from './snapshot-list.service';
 import { SnapshotData } from '@shared/types/snapshot/snapshot-data.type';
 import { Snapshot } from '@shared/types/snapshot/snapshot.type';
 import { environment } from '@environment/environment';
-import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -21,20 +20,15 @@ export class SnapshotListComponent implements OnInit {
   snapshotData: SnapshotData;
   activeAccordionPanel: number = 0;
 
-  activeNetworkIndex: number = 0;
-  activeContextIndex: number = 0;
-  activeExtensionIndex: number = 0;
-
-  networkFilter: string;
-  contextFilter: string;
-  fileExtensionFilter: string;
+  networkFilter: string[] = [];
+  contextFilter: string[] = [];
+  fileExtensionFilter: string[] = [];
 
   private allSnapshots: Snapshot[];
 
   constructor(private snapshotService: SnapshotListService,
               private cdRef: ChangeDetectorRef,
-              private snack: MatSnackBar,
-              private router: Router) { }
+              private snack: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getSnapshots();
@@ -43,7 +37,6 @@ export class SnapshotListComponent implements OnInit {
   private getSnapshots(): void {
     this.snapshotService.getSnapshots().subscribe((snapshotData: SnapshotData) => {
       this.snapshotData = snapshotData;
-      console.log(snapshotData);
       this.allSnapshots = snapshotData.snapshots;
       // this.networkFilter = snapshotData.networks[0];
       // this.contextFilter = snapshotData.contexts[0];
@@ -65,53 +58,53 @@ export class SnapshotListComponent implements OnInit {
     });
   }
 
-  private updateRoute(snapshotIndex): void {
-    // this.router.navigate([this.snapshotData.snapshots[snapshotIndex].fileName]);
-  }
+  // private updateRoute(snapshotIndex): void {
+  // this.router.navigate([this.snapshotData.snapshots[snapshotIndex].fileName]);
+  // }
 
-  updateOpenAccordionElement(index: number): void {
-    if (this.activeAccordionPanel !== index) {
-      this.activeAccordionPanel = index;
-      this.updateRoute(index);
-    }
-  }
+  // updateOpenAccordionElement(index: number): void {
+  //   if (this.activeAccordionPanel !== index) {
+  //     this.activeAccordionPanel = index;
+  //     this.updateRoute(index);
+  //   }
+  // }
 
   copyToClipboard(): void {
     this.snack.open('Command copied to clipboard', null, { duration: 3000 });
   }
 
   filterByNetwork(network: string): void {
-    if (network === this.networkFilter) {
-      this.networkFilter = undefined;
+    if (this.networkFilter.includes(network)) {
+      this.networkFilter.splice(this.networkFilter.indexOf(network), 1);
     } else {
-      this.networkFilter = network;
+      this.networkFilter.push(network);
     }
     this.filterSnapshots();
   }
 
   filterByContext(context: string): void {
-    if (context === this.contextFilter) {
-      this.contextFilter = undefined;
+    if (this.contextFilter.includes(context)) {
+      this.contextFilter.splice(this.contextFilter.indexOf(context), 1);
     } else {
-      this.contextFilter = context;
+      this.contextFilter.push(context);
     }
     this.filterSnapshots();
   }
 
   filterByExtension(extension: string): void {
-    if (extension === this.fileExtensionFilter) {
-      this.fileExtensionFilter = undefined;
+    if (this.fileExtensionFilter.includes(extension)) {
+      this.fileExtensionFilter.splice(this.fileExtensionFilter.indexOf(extension), 1);
     } else {
-      this.fileExtensionFilter = extension;
+      this.fileExtensionFilter.push(extension);
     }
     this.filterSnapshots();
   }
 
   private filterSnapshots(): void {
     this.snapshotData.snapshots = this.allSnapshots.filter((snapshot: Snapshot) =>
-      (this.networkFilter ? snapshot.network === this.networkFilter : true)
-      && (this.contextFilter ? snapshot.context === this.contextFilter : true)
-      && (this.fileExtensionFilter ? snapshot.fileExtension === this.fileExtensionFilter : true)
+      (this.networkFilter.length ? this.networkFilter.includes(snapshot.network) : true)
+      && (this.contextFilter.length ? this.contextFilter.includes(snapshot.context) : true)
+      && (this.fileExtensionFilter.length ? this.fileExtensionFilter.includes(snapshot.fileExtension) : true)
     );
   }
 }

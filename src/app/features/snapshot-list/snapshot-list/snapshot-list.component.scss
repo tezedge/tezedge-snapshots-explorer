@@ -1,17 +1,17 @@
 @import 'utilities/layout';
 @import 'utilities/variables';
 
-@mixin styleIcon($color) {
-  color: $color;
-
-  ::ng-deep mat-icon {
-    margin-right: 3px;
-
-    svg {
-      fill: $color;
-    }
-  }
-}
+//@mixin styleIcon($color) {
+//  color: $color;
+//
+//  ::ng-deep mat-icon {
+//    margin-right: 3px;
+//
+//    svg {
+//      fill: $color;
+//    }
+//  }
+//}
 
 a {
   color: $foreground-9;
@@ -45,7 +45,7 @@ a {
   padding-right: 25px;
 }
 
-.steps-container {
+.snapshots-container {
   padding-bottom: 50px;
 
   .snapshot-element {
@@ -61,15 +61,7 @@ a {
       grid-template-columns: 100px 1fr;
 
       span {
-        line-height: 24px;
-      }
-
-      > div:first-child {
-        height: 24px;
-      }
-
-      .chip > div {
-        line-height: 19px;
+        line-height: 20px;
       }
     }
 
@@ -88,16 +80,12 @@ a {
   //}
 }
 
-.snapshots-wrapper {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding-left: 25px;
-  padding-right: 25px;
-}
-
-.mb-40 {
-  margin-bottom: 40px;
-}
+//.snapshots-wrapper {
+//  max-width: 1300px;
+//  margin: 0 auto;
+//  padding-left: 25px;
+//  padding-right: 25px;
+//}
 
 .chip {
   border-radius: 20px;
@@ -109,43 +97,48 @@ a {
 
   @include flexRowVertCenter();
 
-  &.purple {
-    border-color: #bf5af2;
-    background-color: #bf5af2;
-    @include styleIcon(#fff);
-  }
-
-  &.red {
-    border-color: rgb(211, 15, 69);
-    background: rgb(211, 15, 69);
-    @include styleIcon(#fff);
-  }
-
-  &.blue {
-    border-color: #006bd6;
-    background-color: #006bd6;
-    @include styleIcon(#fff);
-  }
-
-  &.green {
-    border-color: #287e76;
-    background: #287e76;
-    @include styleIcon(#fff);
-  }
-
-  &.white {
-    background: $foreground-9;
-    border-color: transparent;
-    @include styleIcon($background-base);
-  }
+  //&.purple {
+  //  border-color: #bf5af2;
+  //  background-color: #bf5af2;
+  //  @include styleIcon(#fff);
+  //}
+  //
+  //&.red {
+  //  border-color: rgb(211, 15, 69);
+  //  background: rgb(211, 15, 69);
+  //  @include styleIcon(#fff);
+  //}
+  //
+  //&.blue {
+  //  border-color: #006bd6;
+  //  background-color: #006bd6;
+  //  @include styleIcon(#fff);
+  //}
+  //
+  //&.green {
+  //  border-color: #287e76;
+  //  background: #287e76;
+  //  @include styleIcon(#fff);
+  //}
+  //
+  //&.white {
+  //  background: $foreground-9;
+  //  border-color: transparent;
+  //  @include styleIcon($background-base);
+  //}
 
   &.gray {
+    background: $background-surface-fade-2;
     color: $foreground;
-    border-color: $foreground-4;
+    border-color: transparent;
   }
 
   &:hover {
-    opacity: 1 !important;
+    opacity: 0.8 !important;
+
+    > span.d-flex {
+      opacity: 1 !important;
+    }
   }
 }
 
@@ -153,75 +146,6 @@ a {
   color: $foreground-6;
   font-size: 16px;
 }
-
-mat-accordion {
-  display: block;
-
-  &.loading {
-    min-height: 450px;
-  }
-
-  a {
-    color: $foreground;
-  }
-
-  mat-expansion-panel {
-    background: $background-surface;
-
-    &:hover:not(.mat-expanded) {
-      background: $background-surface-fade-1;
-    }
-
-    .mat-expansion-panel-header:hover {
-      background: none !important;
-    }
-  }
-
-  .accordion-paddings {
-    color: $foreground-7;
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  .panel-arrow {
-    transition: 0.2s ease-out;
-    transform: rotate(0deg);
-    cursor: pointer;
-
-    &.open {
-      transform: rotate(90deg);
-      cursor: context-menu;
-    }
-  }
-
-  .download-btn {
-    background-color: $foreground-1;
-    width: 22px;
-    height: 22px;
-    @include flexRowVertCenter();
-
-    &:hover {
-      background-color: $foreground-2;
-    }
-  }
-
-  .content-truncate {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-
-    .chips {
-      width: 160px;
-    }
-
-    &.body {
-      > div {
-        line-height: 24px;
-      }
-    }
-  }
-}
-
 
 .clone-sample {
   background-color: $foreground-2;
@@ -242,3 +166,72 @@ mat-accordion {
     }
   }
 }
+
+
+//mat-accordion {
+//  display: block;
+//
+//  &.loading {
+//    min-height: 450px;
+//  }
+//
+//  a {
+//    color: $foreground;
+//  }
+//
+//  mat-expansion-panel {
+//    background: $background-surface;
+//
+//    &:hover:not(.mat-expanded) {
+//      background: $background-surface-fade-1;
+//    }
+//
+//    .mat-expansion-panel-header:hover {
+//      background: none !important;
+//    }
+//  }
+//
+//  .accordion-paddings {
+//    color: $foreground-7;
+//    padding-right: 15px;
+//    padding-left: 15px;
+//  }
+//
+//  .panel-arrow {
+//    transition: 0.2s ease-out;
+//    transform: rotate(0deg);
+//    cursor: pointer;
+//
+//    &.open {
+//      transform: rotate(90deg);
+//      cursor: context-menu;
+//    }
+//  }
+//
+//  .download-btn {
+//    background-color: $foreground-1;
+//    width: 22px;
+//    height: 22px;
+//    @include flexRowVertCenter();
+//
+//    &:hover {
+//      background-color: $foreground-2;
+//    }
+//  }
+//
+//  .content-truncate {
+//    width: 100%;
+//    max-width: 900px;
+//    margin: 0 auto;
+//
+//    .chips {
+//      width: 160px;
+//    }
+//
+//    &.body {
+//      > div {
+//        line-height: 24px;
+//      }
+//    }
+//  }
+//}
