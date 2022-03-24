@@ -80,7 +80,7 @@ a {
             width: 100%;
             height: 100%;
             background-color: $active-surface;
-            opacity: 0.2;
+            opacity: 0.4;
             z-index: -1;
             border-radius: 2px;
           }
@@ -90,12 +90,12 @@ a {
           }
 
           .copy-button {
-            background-color: $active-surface;
+            background-color: $foreground-9;
             height: 26px;
             width: 24px;
 
             &:hover {
-              filter: brightness(110%);
+              filter: brightness(90%);
             }
           }
         }
