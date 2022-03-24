@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="flex-row align-center">
-        <span class="margin-right-10">Context</span>
+        <span class="margin-right-10">Storage</span>
         <div class="chip pointer text-capitalize margin-right-10"
              [class.active]="contextFilter.includes(context)"
              (click)="filterByContext(context)"
@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="flex-row align-center">
-        <span class="margin-right-10">Version</span>
+        <span class="margin-right-10">Type</span>
         <div *ngFor="let extension of snapshotData.fileExtensions; let i=index"
              class="chip pointer text-capitalize margin-right-10"
              [class.active]="fileExtensionFilter.includes(extension)"
@@ -64,11 +64,11 @@
             <span>{{ snapshot.network }}</span>
           </div>
           <div class="grid-like">
-            <span class="foreground-4 margin-right-10">Context:</span>
+            <span class="foreground-4 margin-right-10">Storage:</span>
             <span>{{ snapshot.context }}</span>
           </div>
           <div class="grid-like">
-            <span class="foreground-4 margin-right-10">Snapshot:</span>
+            <span class="foreground-4 margin-right-10">Type:</span>
             <span>{{ snapshot.fileExtension }}</span>
           </div>
           <div class="grid-like">
@@ -93,20 +93,33 @@
           </div>
           <div class="clone-sample margin-top-10 padding-10 f-12 flex-column align-start">
             <div class="code text-break-all">
-              <div class="foreground-4">
-                # To restore {{ snapshot.network }} full snapshot from {{ snapshot.datetime }},
-                blockhash: {{ snapshot.hash }} execute the following command:
+              <div class="foreground-4"># Download and import the snapshot</div>
+              <div class="foreground-9 flex-row align-center">
+                <div #code1>
+                  light-node import-snapshot
+                  --from {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
+                </div>
+                <span class="flex-row copy-button border-rad-2 pointer flex-row align-center flex-center margin-left-10"
+                      [cdkCopyToClipboard]="code1.textContent"
+                      (click)="copyToClipboard()"
+                      matTooltip="Copy to clipboard">
+                  <mat-icon svgIcon="clipboard" class="icon-white icon-14"></mat-icon>
+                </span>
               </div>
               <br>
-              <div #code class="foreground-9">
-                light-node import-snapshot
-                --from {{ API + '/' + snapshot.network + '/' + snapshot.context + '/' + snapshot.fileExtension + '/' + snapshot.fileName }}
+              <br>
+              <div class="foreground-4"># Run tezedge</div>
+              <div class="foreground-9 flex-row align-center">
+                <div #code2>
+                  light-node --config-file ./light_node/etc/tezedge/tezedge.config --network {{ snapshot.network }} --tezos-context-storage {{ snapshot.context }}
+                </div>
+                <span class="flex-row copy-button border-rad-2 pointer flex-row align-center flex-center margin-left-10"
+                      [cdkCopyToClipboard]="code2.textContent"
+                      (click)="copyToClipboard()"
+                      matTooltip="Copy to clipboard">
+                  <mat-icon svgIcon="clipboard" class="icon-white icon-14"></mat-icon>
+                </span>
               </div>
-            </div>
-            <div [cdkCopyToClipboard]="code.textContent"
-                 (click)="copyToClipboard()"
-                 class="copy-button pointer padding-10 border-rad-2 f-12 font-600 flex-row align-center">
-              <span>COPY TO CLIPBOARD</span>
             </div>
           </div>
         </div>

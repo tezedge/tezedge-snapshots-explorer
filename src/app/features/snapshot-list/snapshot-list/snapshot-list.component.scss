@@ -37,13 +37,8 @@ a {
   }
 }
 
-.filters-wrapper {
-  padding-right: 12px;
-}
-
-.title-row,
-.filters-row {
-  max-width: 1300px;
+.title-row {
+  max-width: 1350px;
   margin: 0 auto;
   padding-left: 25px;
   padding-right: 25px;
@@ -53,7 +48,7 @@ a {
   padding-bottom: 50px;
 
   .snapshot-item-wrapper {
-    max-width: 1300px;
+    max-width: 1350px;
     padding-left: 25px;
     padding-right: 25px;
     margin: 0 auto;
@@ -70,9 +65,7 @@ a {
         padding: 16px;
 
         .grid-like {
-          span {
-            line-height: 24px;
-          }
+          line-height: 24px;
         }
 
         .clone-sample {
@@ -97,11 +90,9 @@ a {
           }
 
           .copy-button {
-            margin-top: 24px;
             background-color: $active-surface;
-            color: #ffffff;
-            height: 32px;
-            line-height: 33px;
+            height: 26px;
+            width: 24px;
 
             &:hover {
               filter: brightness(110%);
