@@ -111,7 +111,7 @@
               <div class="foreground-4"># Run tezedge</div>
               <div class="foreground-9 flex-row align-center">
                 <div #code2>
-                  light-node --config-file ./light_node/etc/tezedge/tezedge.config --network {{ snapshot.network }} --tezos-context-storage {{ snapshot.context }}
+                  light-node --network {{ snapshot.network }} --tezos-context-storage {{ snapshot.context }}
                 </div>
                 <span class="flex-row copy-button border-rad-2 pointer flex-row align-center flex-center margin-left-10"
                       [cdkCopyToClipboard]="code2.textContent"
