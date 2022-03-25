@@ -4,6 +4,7 @@ export interface Snapshot {
   fileName: string;
   size: number;
   network: string;
+  networkFromName: string;
   context: string;
   fileExtension: string;
   hash: string;

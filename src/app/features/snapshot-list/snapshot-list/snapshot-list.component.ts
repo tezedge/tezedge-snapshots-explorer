@@ -19,7 +19,6 @@ export class SnapshotListComponent implements OnInit {
   activeTheme: string;
 
   snapshotData: SnapshotData;
-  activeAccordionPanel: number = 0;
 
   networkFilter: string[] = [];
   contextFilter: string[] = [];
@@ -41,36 +40,9 @@ export class SnapshotListComponent implements OnInit {
     this.snapshotService.getSnapshots().subscribe((snapshotData: SnapshotData) => {
       this.snapshotData = snapshotData;
       this.allSnapshots = snapshotData.snapshots;
-      // this.networkFilter = snapshotData.networks[0];
-      // this.contextFilter = snapshotData.contexts[0];
-      // this.fileExtensionFilter = snapshotData.fileExtensions[0];
-      // const name = this.router.url.split('/')[1];
-      // const snapshotFromUrl = this.allSnapshots.find(s => s.fileName === name);
-      // if (snapshotFromUrl) {
-      //   this.networkFilter = snapshotFromUrl.network;
-      // this.filterSnapshots();
-      // this.activeAccordionPanel = this.snapshotData.snapshots.findIndex(s => s === snapshotFromUrl);
-      // } else {
-      //   this.networkFilter = this.networkTabs[0];
-      // this.updateRoute(this.activeAccordionPanel);
-      // }
-      // this.activeNetworkIndex = this.networkTabs.indexOf(this.networkFilter);
-
-      // this.filterSnapshots();
       this.cdRef.detectChanges();
     });
   }
-
-  // private updateRoute(snapshotIndex): void {
-  // this.router.navigate([this.snapshotData.snapshots[snapshotIndex].fileName]);
-  // }
-
-  // updateOpenAccordionElement(index: number): void {
-  //   if (this.activeAccordionPanel !== index) {
-  //     this.activeAccordionPanel = index;
-  //     this.updateRoute(index);
-  //   }
-  // }
 
   copyToClipboard(): void {
     this.snack.open('Command copied to clipboard', null, { duration: 3000 });

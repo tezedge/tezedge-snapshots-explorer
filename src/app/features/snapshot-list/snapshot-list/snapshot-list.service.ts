@@ -85,6 +85,7 @@ export class SnapshotListService {
             fileName: file.name,
             size: file.size,
             hash: file.name.split('_')[3],
+            networkFromName: file.name.split('_')[1],
             network,
             context,
             fileExtension: extension
