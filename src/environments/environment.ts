@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  api: 'http://162.55.241.136'
+  api: 'http://snapshots.tezedge.com:8880'
 };
 
 /*

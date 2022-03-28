@@ -5,13 +5,7 @@ import { SnapshotListComponent } from './snapshot-list/snapshot-list.component';
 const routes: Routes = [
   {
     path: '',
-    component: SnapshotListComponent,
-    children: [
-      {
-        path: ':name',
-        component: SnapshotListComponent
-      }
-    ]
+    component: SnapshotListComponent
   },
   {
     path: '**',

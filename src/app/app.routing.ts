@@ -19,6 +19,7 @@ const routes: Routes = [
     scrollPositionRestoration: 'enabled',
     relativeLinkResolution: 'legacy',
     onSameUrlNavigation: 'ignore',
+    useHash: false
   })],
   exports: [RouterModule]
 })
